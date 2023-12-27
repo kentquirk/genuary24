@@ -4,18 +4,18 @@ let dividers;
 let balls;
 
 let width = 600;
-let height = 800;
-let ballcount = 200;
-let ballsize = 12;
+let height = 780;
+let ballcount = 350;
+let ballsize = 8;
 let pinsize = 3;
 let pinmax = 35;
 let pinrows = 17;
 let pinstart = pinmax - pinrows - 1;
-let pintop = 200;
+let pintop = 170;
 let wallthick = 10;
-let ndividers = 35;
+let ndividers = pinmax;
 let divheight = 300;
-let divthick = 3;
+let divthick = 7;
 
 function equalSpacing(n, divwid) {
   let positions = [];
@@ -23,7 +23,7 @@ function equalSpacing(n, divwid) {
   let gapsize = (width - wallthick*2 - divwid*n) / ngaps;
   let divstep = gapsize + divwid;
 
-  let x = wallthick + gapsize;
+  let x = wallthick + gapsize + divwid/2;
   for (let d=0; d<n; d++) {
     positions.push(x);
     x += divstep;
@@ -36,7 +36,7 @@ function setup() {
   world.gravity.y = 8;
 
   funnel = new Group();
-  funnel.color = 'light blue';
+  funnel.color = 'blue';
   funnel.collider = 'static';
 
   let lf = new funnel.Sprite(width/4-8, height/8, width/2, wallthick);
@@ -54,7 +54,8 @@ function setup() {
   new box.Sprite(width/2, height-wallthick/2, width, wallthick);
 
   dividers = new Group();
-  dividers.color = 'pink';
+  dividers.color = '#ffcc99';
+  dividers.stroke = '#ffcc99';
   dividers.collider = 'static';
   dividers.width = divthick;
   dividers.height = divheight;
@@ -63,6 +64,7 @@ function setup() {
   positions = equalSpacing(ndividers, divthick);
   positions.forEach((x) => {
     new dividers.Sprite(x, height-wallthick-divheight/2);
+    new dividers.Sprite(x, height-wallthick-divheight-divthick/2, divthick, 'triangle');
   });
 
   pinpos = equalSpacing(pinmax-1, pinsize);
@@ -70,7 +72,8 @@ function setup() {
   let pinysep = pinxsep * Math.sqrt(3)/2;
 
   pins = new Group();
-  pins.color = 'yellow';
+  pins.stroke = 'gray';
+  pins.color = 'white';
   pins.diameter = pinsize;
   pins.collider = 'static';
   pins.bounciness = 0.05;
@@ -98,6 +101,7 @@ function setup() {
 }
 
 function hitpin(ball, pin) {
+  pin.stroke = 'red';
   pin.color = 'red';
 }
 
