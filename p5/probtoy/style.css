@@ -1,6 +1,15 @@
 html, body {
-  margin: 0;
+  margin-left: 20px;
+  margin-right: 20px;
   padding: 0;
+}
+
+body {
+  font-family: 'Roboto', sans-serif;
+  font-size: 18px;
+  line-height: 1.5;
+  color: #333;
+  background-color: #fff;
 }
 
 canvas {
