@@ -3,34 +3,51 @@ let funnel;
 let dividers;
 let balls;
 
-let width = 500;
-let height = 700;
-let pinsize = 5;
-let pinrows = 8;
-let pinxsep = 61;
-let pinysep = 40;
-let pintop = 180;
+let width = 600;
+let height = 800;
+let ballcount = 200;
+let ballsize = 12;
+let pinsize = 3;
+let pinmax = 35;
+let pinrows = 17;
+let pinstart = pinmax - pinrows - 1;
+let pintop = 200;
 let wallthick = 10;
-let ndividers = 8;
-let divheight = 120;
-let divthick = 4;
+let ndividers = 35;
+let divheight = 300;
+let divthick = 3;
+
+function equalSpacing(n, divwid) {
+  let positions = [];
+  let ngaps = n + 1;
+  let gapsize = (width - wallthick*2 - divwid*n) / ngaps;
+  let divstep = gapsize + divwid;
+
+  let x = wallthick + gapsize;
+  for (let d=0; d<n; d++) {
+    positions.push(x);
+    x += divstep;
+  }
+  return positions;
+}
 
 function setup() {
 	new Canvas(width, height);
-  world.gravity.y = 5;
+  world.gravity.y = 8;
 
   funnel = new Group();
   funnel.color = 'light blue';
   funnel.collider = 'static';
 
-  let lf = new funnel.Sprite(width/4-10, height/8, width/2, wallthick);
+  let lf = new funnel.Sprite(width/4-8, height/8, width/2, wallthick);
   lf.rotation = 20;
-  let rf = new funnel.Sprite(3*width/4+10, height/8, width/2, wallthick);
+  let rf = new funnel.Sprite(3*width/4+8, height/8, width/2, wallthick);
   rf.rotation = -20;
 
   box = new Group();
   box.color = 'blue';
   box.collider = 'static';
+  box.bounciness = 0.0;
 
   new box.Sprite(wallthick/2, height/2, wallthick, height);
   new box.Sprite(width-wallthick/2, height/2, wallthick, height);
@@ -41,24 +58,25 @@ function setup() {
   dividers.collider = 'static';
   dividers.width = divthick;
   dividers.height = divheight;
+  dividers.bounciness = 0.0;
 
-  let ngaps = ndividers + 1;
-  let gapsize = (width - wallthick*2 - divthick*ndividers) / ngaps;
-  let divstep = gapsize + divthick;
+  positions = equalSpacing(ndividers, divthick);
+  positions.forEach((x) => {
+    new dividers.Sprite(x, height-wallthick-divheight/2);
+  });
 
-  let x = wallthick + gapsize;
-  for (let d=0; d<ndividers; d++) {
-    let y = height-wallthick-divheight/2;
-    new dividers.Sprite(x, y);
-    x += divstep;
-  }
+  pinpos = equalSpacing(pinmax-1, pinsize);
+  let pinxsep = pinpos[1] - pinpos[0];
+  let pinysep = pinxsep * Math.sqrt(3)/2;
 
   pins = new Group();
-  pins.color = 'red';
+  pins.color = 'yellow';
   pins.diameter = pinsize;
   pins.collider = 'static';
-  for (let r=1; r <= pinrows; r++) {
-    let y = pintop + r * pinysep;
+  pins.bounciness = 0.05;
+  let y = pintop;
+  for (let r=pinstart; r <= pinrows+pinstart; r++) {
+    y += pinysep;
     for (let p=0; p<r; p++) {
       let w = (r-1)*pinxsep;
       let x = pinxsep*p + width/2 - w/2;
@@ -67,23 +85,20 @@ function setup() {
   }
 
   balls = new Group();
-  balls.diameter = 11;
+  balls.diameter = ballsize;
   balls.color = 'green';
   balls.x = width/2;
-  balls.y = height/12;
+  balls.y = height/11;
   balls.mass = 3;
   balls.velocity.y = () => random(-2, -4);
   balls.velocity.x = () => random(-1.5, 1.5);
+  balls.bounciness = 0.4;
 
-	// gems = new Group();
-	// gems.diameter = 10;
-	// gems.x = () => random(0, canvas.w);
-	// gems.y = () => random(0, canvas.h);
-	// gems.amount = 80;
+  balls.collides(pins, hitpin);
+}
 
-	// player = new Sprite();
-
-	// player.overlaps(gems, collect);
+function hitpin(ball, pin) {
+  pin.color = 'red';
 }
 
 function collect(player, gem) {
@@ -92,10 +107,11 @@ function collect(player, gem) {
 
 function draw() {
 	clear();
-  if (frameCount % 3 == 0 && balls.size() < 200) {
+  if (frameCount % 3 == 0 && balls.size() < ballcount) {
     new balls.Sprite();
   }
 
+  // if balls get stuck up high, give them a little push
   balls.forEach((ball) => {
     if (ball.y < (height - divheight - wallthick) && ball.velocity.y == 0) {
       ball.velocity.y = random(0.1, 0.3);
