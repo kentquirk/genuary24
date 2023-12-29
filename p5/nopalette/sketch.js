@@ -5,6 +5,7 @@ let faderate = 0.02;
 let paused = false;
 let strokelevel = 1;
 let strokelevels = [() => noStroke(), () => stroke('black'), () => stroke('gray'), () => stroke('white')];
+let monochrome = false;
 
 let rectangles = [];
 
@@ -42,6 +43,10 @@ function splitColor(col) {
   let b = blue(col);
   change = random(0.4, 0.6);
 
+  if (monochrome) {
+    return [color(255, 255, 255), color(0, 0, 0)];
+  }
+
   if (which == 0) {
     return [color(lerp(r, 255, change), g, b), color(lerp(r, 0, change), g, b)];
   } else if (which == 1) {
@@ -52,6 +57,9 @@ function splitColor(col) {
 }
 
 function randomColor() {
+  if (monochrome) {
+    return color(128);
+  }
   let r = int(random(256));
   let g = int(random(256));
   let b = int(random(256));
@@ -87,6 +95,10 @@ function draw() {
     if (delay == 0) {
       delay = 1;
     }
+  }
+
+  if (kb.presses('m')) {
+    monochrome = !monochrome;
   }
 
   if (frameCount % delay == 0 && !paused) {
