@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>No Palette Rectangles</title>
+
+    <link rel="stylesheet" type="text/css" href="style.css">
+
+    <!-- <script src="libraries/p5.min.js"></script>
+    <script src="libraries/p5.sound.min.js"></script> -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.js"></script>
+    <script src="https://p5play.org/v3/planck.min.js"></script>
+    <script src="https://p5play.org/v3/p5play.js"></script>  </head>
+
+  <body>
+    <h1>Random grid of colors</h1>
+    <p>
+      This creates an array of rectangles starting with one that covers the
+      whole canvas, colored randomly.
+    </p>
+    <p>
+      Each round, it chooses a random rectangle and splits it into two
+      rectangles either horizontally or vertically. Each of these new rectangles
+      is then recolored with a variation of the previous color by choosing
+      either r, g, or b from the parent rectangle. Then one half adds to that
+      value (lightening it), and the other subtracts from it (darkening it). The
+      other two components of the color are kept constant.
+    </p>
+    <p>
+      The colors fade from the starting value to the target value over time. When the
+      grid gets too dense, it clears and starts over.
+    </p>
+    <h2>Controls</h2>
+    <ul>
+      <li>Press 'c' to clear the grid and restart.</li>
+      <li>Press space to pause and unpause the subdivision process.</li>
+      <li>Press 'l' to change the line colors between the rectangles between black, gray, white, and none.</li>
+    </p>
+    <div id="sketch-holder">
+      <script src="sketch.js"></script>
+    </div>
+  </body>
+</html>
