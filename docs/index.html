@@ -13,6 +13,27 @@
     <p>
         I'm playing with P5 to see if I can make some interesting things as part of <a href="https://genuary.art/">Genuary 2024</a>.
     </p>
+    <h2>Genuary 3 - The Droste Effect</h2>
+    <h3>Zooming in on "microbes"</h3>
+    <p>
+      Better to see it<a href="droste/">here</a>. Source code <a
+      href="https://github.com/kentquirk/genuary24/tree/main/p5/droste">here</a>.
+    </p>
+    <h2>Genuary 2 - No Palette</h2>
+    <h3>Random Grid of Colors</h3>
+    <p>
+      This creates an array of rectangles starting with one that covers the
+      whole canvas, colored randomly. Each round, it chooses a random rectangle
+      and splits it into two rectangles either horizontally or vertically. Each
+      of these new rectangles is then recolored with a variation of the previous
+      color by choosing either r, g, or b from the parent rectangle. Then one
+      half adds to that value (lightening it), and the other subtracts from it
+      (darkening it). The other two components of the color are kept constant.
+      The colors fade from the starting value to the target value over time.
+      When the grid gets too dense, it clears and starts over. Running demo <a
+      href="nopalette/">here</a>. Source code <a
+      href="https://github.com/kentquirk/genuary24/tree/main/p5/nopalette">here</a>.
+    </p>
     <h2>Genuary 1 - Particles</h2>
     <h3>Probability Toy</h3>
     <p>
@@ -25,14 +46,5 @@
       The particle chains grow in interesting ways. It clears and restarts whenever it gets full.
       Running demo <a href="particles2/">here</a>. Source code <a href="https://github.com/kentquirk/genuary24/tree/main/p5/particles2">here</a>.
     </p>
-    <h2>Genuary 2 - No Palette</h2>
-    <h3>Random Grid of Colors</h3>
-    <p>
-      This creates an array of rectangles starting with one that covers the whole canvas, colored randomly.
-      Each round, it chooses a random rectangle and splits it into two rectangles either horizontally or vertically. Each of these new rectangles
-      is then recolored with a variation of the previous color by choosing either r, g, or b from the parent rectangle. Then one half adds to that
-      value (lightening it), and the other subtracts from it (darkening it). The other two components of the color are kept constant.
-      The colors fade from the starting value to the target value over time. When the grid gets too dense, it clears and starts over.
-      Running demo <a href="nopalette/">here</a>. Source code <a href="https://github.com/kentquirk/genuary24/tree/main/p5/nopalette">here</a>.
   </body>
 </html>
