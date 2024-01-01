@@ -58,7 +58,7 @@ function splitColor(col) {
 
 function randomColor() {
   if (monochrome) {
-    return color(128);
+    return color(int(random(256)));
   }
   let r = int(random(256));
   let g = int(random(256));
