@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Kaotik</title>
+
+    <link rel="stylesheet" type="text/css" href="style.css">
+
+    <!-- <script src="libraries/p5.min.js"></script>
+    <script src="libraries/p5.sound.min.js"></script> -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.js"></script>
+    <script src="https://p5play.org/v3/planck.min.js"></script>
+    <script src="https://p5play.org/v3/p5play.js"></script>
+    <script src="sketch.js"></script>
+  </head>
+
+  <body>
+    <h1>Kaotik -- a chaos system</h1>
+    <p>
+      This is a simulation that should be chaotic. It's a 2D grid of land, with land cells
+      that can be either "dirt" or "grass".
+      There are also rabbits that live off of grass, and wolves that live off of rabbits.
+      Each turn:
+      <ul>
+        <li>Dirt cells become grass with 20% probability</li>
+        <li>Grass cells surrounded by grass spawn a rabbit with 1% probability</li>
+        <li>2 rabbits next to empty grass mate and may (50%) spawn a new rabbit on the grass</li>
+        <li>Rabbits on grass eat it</li>
+        <li>Rabbits on dirt moves to a neighboring unoccupied grass cell (if any)</li>
+        <li>Rabbits with no adjacent grass die</li>
+        <li>Rabbits with 3 or more adjacent rabbits may (50%) spawn a wolf in an unoccupied grid square at the edge of the grid</li>
+        <li>Wolves with no adjacent rabbits will choose a random neighbor to move to</li>
+        <li>Wolves next to a single rabbit will move into the rabbit's square and eat the rabbit</li>
+        <li>Wolves with two or more adjacent rabbits will choose a random rabbit to eat, and move into its square, and spawn another wolf on one of the other adjacent rabbits</li>
+        <li>A wolf that goes more than 16 turns without eating dies</li>
+      </ul>
+    </p>
+    <p>
+      There's a graph that shows the size of each population over time.
+      Note that the relative size of the populations is interdependent but not cyclic.
+    </p>
+    <div id="sketch-holder">
+    </div>
+    <p>
+    </p>
+    <h2>Controls</h2>
+    <ul>
+      <li><b>space</b>  -- pause and unpause the sketch</li>
+      <li><b>c</b> continuous operation on and off</li>
+      <li><b>g</b> run a single generation</li>
+    </p>
+  </body>
+</html>
