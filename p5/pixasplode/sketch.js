@@ -10,6 +10,7 @@ let state;
 let maxpixels = 50;
 let pixelsPerFrame = 10;
 let framecount = 0;
+let force=3;
 
 function preload() {
   images = [
@@ -72,7 +73,16 @@ function setup() {
   state = new StateMachine();
   state.add("moving", () => {
     framecount++;
-    if (framecount > 500) {
+    if (framecount > 300) {
+      state.transition("dropping");
+    }
+  });
+
+  state.add("dropping", () => {
+    framecount++;
+    world.gravity.y = 5;
+    if (framecount > 600) {
+      world.gravity.y = 0;
       restart();
     }
   });
@@ -106,8 +116,8 @@ function setup() {
       let p = pixels[i];
       let h = getHue(p.color.levels[0], p.color.levels[1], p.color.levels[2]);
 
-      p.velocity.x = cos(h);
-      p.velocity.y = sin(h);
+      p.velocity.x = force*cos(h);
+      p.velocity.y = force*sin(h);
     }
     state.transition("moving");
   });
