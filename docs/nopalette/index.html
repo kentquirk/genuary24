@@ -11,6 +11,8 @@
     <!-- <script src="libraries/p5.min.js"></script>
     <script src="libraries/p5.sound.min.js"></script> -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.js"></script>
+    <script src="libraries/quicksettings.js" type="text/javascript"></script>
+    <script src="libraries/p5.gui.js" type="text/javascript"></script>
     <script src="https://p5play.org/v3/planck.min.js"></script>
     <script src="https://p5play.org/v3/p5play.js"></script>
   </head>
@@ -38,11 +40,12 @@
     <ul>
       <li><b>space</b>  -- pause and unpause the subdivision process.</li>
       <li><b>'c'</b> -- clear the grid and restart.</li>
-      <li><b>'l'</b> -- change the line colors between the rectangles between black, gray, white, and none.</li>
       <li><b>'s'</b> -- slow down the subdivision process (cuts by half each time)</li>
       <li><b>'f'</b> -- speed up the subdivision process (doubles each time)</li>
       <li><b>'m'</b> -- toggle monochrome mode</li>
+      <li><b>'!'</b> -- save the current sketch to a PNG file</li>
     </p>
+    <p>Random seed: <i class="seed">seed</i></p>
     <div id="sketch-holder">
       <script src="sketch.js"></script>
     </div>
