@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="utf-8" />
@@ -5,97 +6,211 @@
 
     <title>Genuary 2024 experiments with P5</title>
 
-    <link rel="stylesheet" type="text/css" href="style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma-rtl.min.css">
+    <!-- <link rel="stylesheet" type="text/css" href="style.css"> -->
   </head>
 
   <body>
-    <h1>P5 experiments</h1>
-    <p>
-        I'm playing with P5 to see if I can make some interesting things as part of <a href="https://genuary.art/">Genuary 2024</a>.
-        This stuff seems to work pretty well on mobile.
-    </p>
-    <h2>Genuary 13 (Wobbly function day)</h2>
-    <h3>Seven Deadly Sines</h3>
-    <p>
-      This project combines seven sine wave generators at different frequencies to make one smoothly evolving image.
-      It uses the basic concept of Lissajous figures but uses dots instead of continuous lines, and
-      modifies colors and dot sizes dynamically too.
-      Running demo <a href="sevenDeadlySines/">here</a>.
-      Source code <a href="https://github.com/kentquirk/genuary24/tree/main/p5/sevenDeadlySines">here</a>.
-    </p>
-    <h2>Genuary 12 (lava lamp)</h2>
-    <h3>Not a Lavalamp</h3>
-    <p>
-      I wanted to create a lavalamp by doing a physics simulation of a mesh of points under
-      various forces. I played with using a concave hull library to create the shape around
-      the collection of points, and also with using a Voronoi diagram to create a mesh and
-      then adding some weird spring-like forces to try to keep the mesh together. I had more
-      fun playing with that and never bothered to finish making it look like a lavalamp.
-      Running demo <a href="lavalamp/">here</a>.
-      Source code <a href="https://github.com/kentquirk/genuary24/tree/main/p5/lavalamp">here</a>.
-    </p>
-    <h2>Genuary 8 (chaotic)</h2>
-    <h3>Kaotik</h3>
-    <p>
-      This is a simulation of rabbits and wolves in an ecosystem. The rabbits eat the grass,
-      the wolves eat the rabbits, and the wolves die if they don't eat enough rabbits.
-      There populations fluctuate chaotically. Running demo <a href="kaotik/">here</a>.
-      Source code <a href="https://github.com/kentquirk/genuary24/tree/main/p5/kaotic">here</a>.
-    </p>
-    <h2>Genuary 4 (Pixels) & 6 (Screensaver)</h2>
-    <h3>Pixasplode</h3>
-    <p>
-      This loads a picture, draws it as circular pixels in random order, and then gives each pixel
-      a weak velocity dependent on the hue of the pixel. It's a fairly pleasing way to blow up the
-      image. Running demo <a href="pixasplode/">here</a>.
-      Source code <a href="https://github.com/kentquirk/genuary24/tree/main/p5/pixasplode">here</a>.
-    </p>
-    <h2>Genuary 3 - The Droste Effect</h2>
-    <h3>Zooming in on "microbes"</h3>
-    <p>
-      The Droste Effect is when an image contains a smaller version of itself;
-      in this case what I was after was that you're looking at microbes through
-      a microscope, and you see them float onscreen. You move the slide to
-      center one of them, zoom in, and find that the microbe contains more
-      microbes.
-    </p>
-    <p>It's not perfect but I like it.</p>
-    <blockquote>
-        Big fleas have little fleas<br />
-        Upon their backs to bite 'em<br />
-        And little fleas still lesser fleas<br />
-        And so, <i>ad infinitum</i><br />
-    </blockquote>
-    <p>
-      See it <a href="droste/">here</a>. Source code <a
-      href="https://github.com/kentquirk/genuary24/tree/main/p5/droste">here</a>.
-    </p>
-    <h2>Genuary 2 - No Palette</h2>
-    <h3>Random Grid of Colors</h3>
-    <p>
-      This creates an array of rectangles starting with one that covers the
-      whole canvas, colored randomly. Each round, it chooses a random rectangle
-      and splits it into two rectangles either horizontally or vertically. Each
-      of these new rectangles is then recolored with a variation of the previous
-      color by choosing either r, g, or b from the parent rectangle. Then one
-      half adds to that value (lightening it), and the other subtracts from it
-      (darkening it). The other two components of the color are kept constant.
-      The colors fade from the starting value to the target value over time.
-      When the grid gets too dense, it clears and starts over. Running demo <a
-      href="nopalette/">here</a>. Source code <a
-      href="https://github.com/kentquirk/genuary24/tree/main/p5/nopalette">here</a>.
-    </p>
-    <h2>Genuary 1 - Particles</h2>
-    <h3>Probability Toy</h3>
-    <p>
-      This simulates a demo toy I've seen that drops hundreds of balls into a grid of pins, and they fall into a bell curve.
-      Running demo <a href="probtoy/">here</a>. Source code <a href="https://github.com/kentquirk/genuary24/tree/main/p5/probtoy">here</a>.
-    </p>
-    <h3>Particles</h3>
-    <p>
-      This is a particle experiment. Each particle is thrown at a random angle, and when it hits the wall, it sticks. If it hits a stuck particle, it sticks.
-      The particle chains grow in interesting ways. It clears and restarts whenever it gets full.
-      Running demo <a href="particles2/">here</a>. Source code <a href="https://github.com/kentquirk/genuary24/tree/main/p5/particles2">here</a>.
-    </p>
+    <section class="section">
+      <div class="container">
+        <h1 class="title">P5 experiments</h1>
+        <p>
+          I'm playing with P5 to see if I can make some interesting things as part of <a href="https://genuary.art/">Genuary
+            2024</a>.
+          This stuff seems to work pretty well on mobile.
+        </p>
+      </div>
+      <div class="container">
+        <div class="columns">
+          <div class="column">
+            <div class="card">
+              <div class="card-content">
+                <p class="title">Genuary ?</p>
+                <p class="subtitle">Coming soon to a webpage near you</p>
+                <div class="content">
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="column">
+            <div class="card">
+              <div class="card-image">
+                <figure class="image is-square">
+                  <img src="images/sevendeadly.png" alt="No Palette Rectangles">
+                </figure>
+              </div>
+              <div class="card-content">
+                <p class="title">Genuary 13</p>
+                <p class="subtitle is-4">(Wobbly function day)</p>
+                <p class="subtitle">Seven Deadly Sines</p>
+                <div class="content">
+                  This project combines seven sine wave generators at different frequencies to make one smoothly evolving image.
+                  It uses the basic concept of Lissajous figures but uses dots instead of continuous lines, and
+                  modifies colors and dot sizes dynamically too.
+                  Running demo <a href="sevenDeadlySines/">here</a>.
+                  Source code <a href="https://github.com/kentquirk/genuary24/tree/main/p5/sevenDeadlySines">here</a>.
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="column">
+            <div class="card">
+              <div class="card-image">
+                <figure class="image is-square">
+                  <img src="images/lavalamp.png" alt="No Palette Rectangles">
+                </figure>
+              <div class="card-content">
+                <p class="title">Genuary 12</p>
+                <p class="subtitle is-4">(Lava Lamp)</p>
+                <p class="subtitle">Not a Lavalamp</p>
+                <div class="content">
+                  I wanted to create a lavalamp by doing a physics simulation of a mesh of points under
+                  various forces. I played with using a concave hull library to create the shape around
+                  the collection of points, and also with using a Voronoi diagram to create a mesh and
+                  then adding some weird spring-like forces to try to keep the mesh together. I had more
+                  fun playing with that and never bothered to finish making it look like a lavalamp.
+                  Running demo <a href="lavalamp/">here</a>.
+                  Source code <a href="https://github.com/kentquirk/genuary24/tree/main/p5/lavalamp">here</a>.
+                </div>
+              </div>
+            </div>
+              </div>
+        </div>
+        </div>
+        <div class="columns">
+          <div class="column">
+            <div class="card">
+              <div class="card-image">
+                <figure class="image is-square">
+                  <img src="images/kaotik.png" alt="No Palette Rectangles">
+                </figure>
+              </div>
+              <div class="card-content">
+                <p class="title">Genuary 8 (chaotic)</p>
+                <p class="subtitle">Kaotik</p>
+                <div class="content">
+                  This is a simulation of rabbits and wolves in an ecosystem. The rabbits eat the grass,
+                  the wolves eat the rabbits, and the wolves die if they don't eat enough rabbits.
+                  There populations fluctuate chaotically. Running demo <a href="kaotik/">here</a>.
+                  Source code <a href="https://github.com/kentquirk/genuary24/tree/main/p5/kaotic">here</a>.
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="column">
+            <div class="card">
+              <div class="card-image">
+                <figure class="image is-square">
+                  <img src="images/pixasplode.png" alt="No Palette Rectangles">
+                </figure>
+              </div>
+              <div class="card-content">
+                <p class="title">Genuary 4 (Pixels) & 6 (Screensaver)</p>
+                <p class="subtitle">Pixasplode</p>
+                <div class="content">
+                  This loads a picture, draws it as circular pixels in random order, and then gives each pixel
+                  a weak velocity dependent on the hue of the pixel. It's a fairly pleasing way to blow up the
+                  image. Running demo <a href="pixasplode/">here</a>.
+                  Source code <a href="https://github.com/kentquirk/genuary24/tree/main/p5/pixasplode">here</a>.
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="column">
+            <div class="card-image">
+              <figure class="image is-square">
+                <img src="images/droste.png" alt="No Palette Rectangles">
+              </figure>
+            </div>
+          <div class="card">
+              <div class="card-content">
+                <p class="title">Genuary 3 (The Droste Effect)</p>
+                <p class="subtitle">Zooming in on "microbes"</p>
+                <div class="content">
+                  The Droste Effect is when an image contains a smaller version of itself;
+                  in this case what I was after was that you're looking at microbes through
+                  a microscope, and you see them float onscreen. You move the slide to
+                  center one of them, zoom in, and find that the microbe contains more
+                  microbes.<br />
+                  It's not perfect but I like it.<br />
+                  <blockquote>
+                      Big fleas have little fleas<br />
+                      Upon their backs to bite 'em<br />
+                      And little fleas still lesser fleas<br />
+                      And so, <i>ad infinitum</i><br />
+                  </blockquote>
+                  See it <a href="droste/">here</a>. Source code <a
+                  href="https://github.com/kentquirk/genuary24/tree/main/p5/droste">here</a>.
+                </div>
+              </div>
+            </div>
+              </div>
+        </div>
+        </div>
+        <div class="columns">
+          <div class="column">
+            <div class="card">
+              <div class="card-image">
+                <figure class="image is-4by5">
+                  <img src="images/colorgrid.png" alt="No Palette Rectangles">
+                </figure>
+              </div>
+              <div class="card-content">
+                <p class="title">Genuary 2 (No Palette)</p>
+                <p class="subtitle">Random Grid of Colors</p>
+                <div class="content">
+                  This creates an array of rectangles starting with one that covers the
+                  whole canvas, colored randomly. Each round, it chooses a random rectangle
+                  and splits it into two rectangles either horizontally or vertically. Each
+                  of these new rectangles is then recolored with a variation of the previous
+                  color by choosing either r, g, or b from the parent rectangle. Then one
+                  half adds to that value (lightening it), and the other subtracts from it
+                  (darkening it). The other two components of the color are kept constant.
+                  The colors fade from the starting value to the target value over time.
+                  When the grid gets too dense, it clears and starts over. Running demo <a
+                  href="nopalette/">here</a>. Source code <a
+                  href="https://github.com/kentquirk/genuary24/tree/main/p5/nopalette">here</a>.
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="column">
+            <div class="card">
+              <div class="card-image">
+                <figure class="image is-4by5">
+                  <img src="images/probtoy.png" alt="No Palette Rectangles">
+                </figure>
+              </div>
+              <div class="card-content">
+                <p class="title">Genuary 1 (Particles)</p>
+                <p class="subtitle">Probability Toy</p>
+                <div class="content">
+                  This simulates a demo toy I've seen that drops hundreds of balls into a grid of pins, and they fall into a bell curve.
+                  Running demo <a href="probtoy/">here</a>. Source code <a href="https://github.com/kentquirk/genuary24/tree/main/p5/probtoy">here</a>.
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="column">
+            <div class="card">
+              <div class="card-image">
+                <figure class="image is-square">
+                  <img src="images/wall.png" alt="No Palette Rectangles">
+                </figure>
+              </div>
+                <div class="card-content">
+                <p class="title">Genuary 1 (Particles)</p>
+                <p class="subtitle">See What Sticks</p>
+                <div class="content">
+                  This is a particle experiment. Each particle is thrown at a random angle, and when it hits the wall, it sticks. If it hits a stuck particle, it sticks.
+                  The particle chains grow in interesting ways. It clears and restarts whenever it gets full.
+                  Running demo <a href="particles2/">here</a>. Source code <a href="https://github.com/kentquirk/genuary24/tree/main/p5/particles2">here</a>.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
   </body>
 </html>
