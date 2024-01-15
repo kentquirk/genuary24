@@ -1,4 +1,3 @@
-let npoints = 40;
 let nrepeats = 3;
 
 let attrs = [
@@ -11,10 +10,15 @@ let attrs = [
 ];
 
 let field;
-let showField = false;
-let rotationSpeed = .1;
-let doRotate = true;
-let fieldtype = 'circular';
+
+// vars are the things the gui manipulates
+var showField = false;
+var rotateNodes = true;
+var fieldtype = ['circular', 'random'];
+var rotationSpeed = .1;
+var npoints = 40;
+
+let lastFieldtype;
 
 function frac(x) {
   return x - floor(x);
@@ -86,8 +90,11 @@ class FlowField {
         let yoff = frac(nrepeats * j/this.rows);
 
         let pos = createVector(i * this.resolution, j * this.resolution);
-        let theta = p5.Vector.sub(pos, center).heading();
-        this.field[i][j] = new FlowNode(theta, 1);
+        let theta = p5.Vector.sub(pos, center).heading()+90;
+        // the magnitude of the vector is related to the distance from the center;
+        // we don't want it to be zero at the center.
+        let mag = map(dist(pos.x, pos.y, center.x, center.y), 0, dist(0, 0, width, height), 0.5, 1.5);
+        this.field[i][j] = new FlowNode(theta, mag);
       }
     }
   }
@@ -163,7 +170,7 @@ class Points {
 
 function restart() {
   field = new FlowField(fieldtype);
-  points = new Points
+  points = new Points;
 }
 
 function windowResized() {
@@ -174,6 +181,18 @@ function windowResized() {
 function setup() {
   let canvas = createCanvas(windowWidth, windowHeight);
   canvas.parent('sketch-holder');
+
+  gui = createGui("controls", this);
+  gui.setPosition(10, 50);
+  gui.addGlobals("rotateNodes", "showField", "fieldtype");
+  sliderRange(0, 1, .1);
+  gui.addGlobals("rotationSpeed");
+  sliderRange(10, 100, 5);
+  gui.addGlobals("npoints");
+  gui.addButton("restart", restart);
+
+  lastFieldtype = fieldtype;
+
   restart();
 }
 
@@ -190,8 +209,13 @@ function draw() {
   }
 
   points.applyForces(field);
-  if (doRotate) {
+  if (rotateNodes) {
     field.rotate(rotationSpeed);
+  }
+
+  if (lastFieldtype != fieldtype) {
+    lastFieldtype = fieldtype;
+    restart();
   }
 
 
@@ -210,7 +234,7 @@ function draw() {
   }
 
   if (kb.presses(' ')) {
-    doRotate = !doRotate;
+    rotateNodes = !rotateNodes;
   }
 
 }
