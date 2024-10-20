@@ -1,0 +1,34 @@
+html, body {
+  margin-left: 20px;
+  margin-right: 20px;
+  padding: 0;
+}
+
+body {
+  font-family: 'Roboto', sans-serif;
+  font-size: 18px;
+  line-height: 1.5;
+  color: #333;
+  background-color: #fff;
+}
+
+canvas {
+  display: block;
+}
+
+#sketch-holder {
+  margin: 0;
+  display: flex;
+  max-width: 100%;
+  justify-content: center;
+}
+
+pre {
+  font-size: 16px;
+  line-height: 1.5;
+  color: #333;
+  background-color: #f4f4f4;
+  padding: 20px;
+  border-radius: 5px;
+  overflow-x: auto;
+}
