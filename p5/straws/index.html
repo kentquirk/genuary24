@@ -19,13 +19,46 @@
       }
       window.toYAML = toYAML;
     </script>
+    <script src="helpers.js"></script>
+    <script src="shapes.js"></script>
+    <script src="components.js"></script>
     <script src="sketch.js"></script>
   </head>
 
   <body>
     <a href="..">back</a>
 		<h1>Straws UI Prototype</h1>
-    <h3>Add component</h3>
+    <table id="instructions">
+      <tr>
+        <td>
+          <h2>Instructions</h2>
+        </td>
+        <td>
+          <h2>Controls</h2>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <ul>
+            <li>Click buttons below to add components.</li>
+            <li>Drag a component to move it.</li>
+            <li>Drag from a source to a destination to create a connection.</li>
+            <li>Click on a component to see its properties.</li>
+            <li>See HPSF for the layout below.</li>
+          </ul>
+        </td>
+        <td>
+          <ul>
+            <!-- <li><b>space</b>  -- pause and unpause the sketch.</li> -->
+            <li><b>r/R</b>  -- restart the sketch/remove all connections.</li>
+            <li><b>d</b>  -- delete the highlighted component or all connections using the highlighted port</li>
+            <li><b>z/Z</b>  -- zoom in/out.</li>
+            <li><b>j</b>  -- save HPSF as JSON.</li>
+            <li><b>y</b>  -- save HPSF as YAML (with .txt extension, sadly).</li>
+          </ul>
+        </td>
+      </tr>
+    </table>
     <div id="button-holder"></div>
     <div id="selected-component">
     </div>
@@ -36,14 +69,5 @@
 <code id="HPSF">
 </code>
     </pre>
-    <h2>Controls</h2>
-    <ul>
-      <!-- <li><b>space</b>  -- pause and unpause the sketch.</li> -->
-      <li><b>r/R</b>  -- restart the sketch/remove all connections.</li>
-      <li><b>d</b>  -- delete the highlighted component or connections to the highlighted port</li>
-      <li><b>z/Z</b>  -- zoom in/out.</li>
-      <li><b>j</b>  -- save HPSF as JSON.</li>
-      <li><b>y</b>  -- save HPSF as YAML (with .txt extension, sadly).</li>
-    </ul>
   </body>
 </html>

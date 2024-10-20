@@ -33,7 +33,15 @@ pre {
   overflow-x: auto;
 }
 
-table {
+#instructions {
+  margin-left: 2rem;
+  border-collapse: collapse;
+  width: 80%;
+  margin-bottom: 20px;
+  background-color: lightcyan;
+}
+
+#property-table {
   margin-left: 2rem;
   border-collapse: collapse;
   width: 30rem;
