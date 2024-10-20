@@ -44,9 +44,10 @@ class Shape {
 }
 
 class Port {
-  constructor(parent, type, label, col) {
-    this.parent = parent;
+  constructor(parent, type, direction, label, col) {
     this.type = type;
+    this.parent = parent;
+    this.direction = direction;
     this.label = label;
     this.col = col;
     this.x = 0;
@@ -60,7 +61,7 @@ class Port {
   draw() {
     let align = BOTTOM;
     let offset = this.portRadius;
-    if (this.type === 'input') {
+    if (this.direction === 'input') {
       align = TOP;
       offset = -this.portRadius;
     }
@@ -78,7 +79,7 @@ class Port {
   // ask if x, y is inside the port
   hit(x, y) {
     let offset = this.portRadius;
-    if (this.type === 'input') {
+    if (this.direction === 'input') {
       offset = -this.portRadius;
     }
     return dist(x, y, this.x, this.y + offset) <= this.portRadius;
@@ -86,9 +87,10 @@ class Port {
 
   yaml(indent) {
     let spaces = ' '.repeat(indent) + '- ';
-    let yaml = spaces + "Name: " + this.label + '\n';
+    let yaml = spaces + 'Name: ' + this.label + '\n';
     spaces = ' '.repeat(indent+2);
-    yaml += spaces + "Direction: " + this.type + '\n';
+    yaml += spaces + 'Direction: ' + this.direction + '\n';
+    yaml += spaces + 'Type: ' + this.type + '\n';
     return yaml;
   }
 }
@@ -105,13 +107,13 @@ class ComponentShape extends Shape {
     this.textFill = textCol;
   }
 
-  addInput(parent, label, col) {
-    this.inputs.set(label, new Port(parent, "input", label, col));
+  addInput(parent, type, label, col) {
+    this.inputs.set(label, new Port(parent, type, 'input', label, col));
     this._layoutPorts();
   }
 
-  addOutput(parent, label, col) {
-    this.outputs.set(label, new Port(parent, "output", label, col));
+  addOutput(parent, type, label, col) {
+    this.outputs.set(label, new Port(parent, type, 'output', label, col));
     this._layoutPorts();
   }
 
@@ -195,12 +197,12 @@ class Component {
     this.dragY = 0;
   }
 
-  addInput(label, col) {
-    this.shape.addInput(this, label, col);
+  addInput(type, label, col) {
+    this.shape.addInput(this, type, label, col);
   }
 
-  addOutput(label, col) {
-    this.shape.addOutput(this, label, col);
+  addOutput(type, label, col) {
+    this.shape.addOutput(this, type, label, col);
   }
 
   draw() {
@@ -277,9 +279,9 @@ class Component {
 
   yaml(indent) {
     let spaces = ' '.repeat(indent) + '- ';
-    let yaml = spaces + "Name: " + this.label + '\n';
+    let yaml = spaces + 'Name: ' + this.label + '\n';
     spaces = ' '.repeat(indent+2);
-    yaml += spaces + "Ports:\n";
+    yaml += spaces + 'Ports:\n';
     for (let input of this.shape.inputs.values()) {
       yaml += input.yaml(indent+2);
     }
@@ -294,7 +296,8 @@ class Connection {
   constructor(frComp, frPort, toComp, toPort) {
     // always go from the output to the input
     let p = frComp.port(frPort);
-    if (frComp.port(frPort).type == 'input') {
+    print(frComp);
+    if (frComp.port(frPort).direction == 'input') {
       // print('reversing connection');
       this.frComp = toComp;
       this.frPort = toPort;
@@ -332,22 +335,22 @@ class Connection {
 
 
 function restart() {
-   bg = 128;
-   zoomLevel = 2;
-   inputCol = color(128, 128, 255);
-   outputCol = color(255, 128, 128);
+  bg = 128;
+  zoomLevel = 2;
+  inputCol = color(128, 128, 255);
+  outputCol = color(255, 128, 128);
 
   c1 = new Component('TraceGRPC', 100, 100);
-  c1.addOutput('TraceOut', outputCol);
+  c1.addOutput('OtelTraces', 'TraceOut', outputCol);
   c2 = new Component('DeterministicSampler', 100, 300);
-  c2.addInput('Input', inputCol);
-  c2.addOutput('Kept', outputCol);
-  c2.addOutput('Dropped', outputCol);
+  c2.addInput('OtelTraces', 'Input', inputCol);
+  c2.addOutput('OtelTraces', 'Kept', outputCol);
+  c2.addOutput('OtelTraces', 'Dropped', outputCol);
   c3 = new Component('HoneycombExporter', 100, 500);
-  c3.addInput('Traces', inputCol);
+  c3.addInput('OtelTraces', 'Traces', inputCol);
   components = [c1, c2, c3];
   let connection = new Connection(c1, 'TraceOut', c2, 'Input');
-  connections.push(connection);
+  connections = [connection];
   generateYaml();
 }
 
