@@ -11,8 +11,14 @@
     <!-- <script src="libraries/p5.min.js"></script>
     <script src="libraries/p5.sound.min.js"></script> -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.js"></script>
-    <!-- <script src="https://p5play.org/v3/planck.min.js"></script> -->
-    <!-- <script src="https://p5play.org/v3/p5play.js"></script> -->
+    <!-- this is an ugly hack to get the yaml library to work -->
+    <script type="module">
+      import YAML from 'https://cdn.jsdelivr.net/npm/yaml@2.5.0/browser/index.min.js';
+      function toYAML(obj) {
+        return YAML.stringify(obj);
+      }
+      window.toYAML = toYAML;
+    </script>
     <script src="sketch.js"></script>
   </head>
 
@@ -33,8 +39,11 @@
     <h2>Controls</h2>
     <ul>
       <!-- <li><b>space</b>  -- pause and unpause the sketch.</li> -->
-      <li><b>r</b>  -- restart the sketch.</li>
+      <li><b>r/R</b>  -- restart the sketch/remove all connections.</li>
+      <li><b>d</b>  -- delete the highlighted component or connections to the highlighted port</li>
       <li><b>z/Z</b>  -- zoom in/out.</li>
+      <li><b>j</b>  -- save HPSF as JSON.</li>
+      <li><b>y</b>  -- save HPSF as YAML (with .txt extension, sadly).</li>
     </ul>
   </body>
 </html>

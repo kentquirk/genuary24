@@ -10,6 +10,7 @@ let dragPort = null;
 let inputCol, outputCol;
 let textCol = 0;
 let changed = false;
+let hpsfText = '';
 
 // helper function
 function verticalCurve(p1, p2) {
@@ -86,13 +87,12 @@ class Port {
     return dist(x, y, this.x, this.y + offset) <= this.portRadius;
   }
 
-  yaml(indent) {
-    let spaces = ' '.repeat(indent) + '- ';
-    let yaml = spaces + 'Name: ' + this.label + '\n';
-    spaces = ' '.repeat(indent+2);
-    yaml += spaces + 'Direction: ' + this.direction + '\n';
-    yaml += spaces + 'Type: ' + this.type + '\n';
-    return yaml;
+  json() {
+    return {
+      Name: this.label,
+      Direction: this.direction,
+      Type: this.type
+    };
   }
 }
 
@@ -355,25 +355,23 @@ class Component {
     }
   }
 
-  yaml(indent) {
-    let spaces = ' '.repeat(indent) + '- ';
-    let yaml = spaces + 'Name: ' + this.label + '\n';
-    spaces = ' '.repeat(indent+2);
-    yaml += spaces + 'Kind: ' + this.kind + '\n';
-    yaml += spaces + 'Ports:\n';
+  json() {
+    let j = {
+      Name: this.label,
+      Kind: this.kind,
+      Ports: []
+    };
     for (let input of this.shape.inputs.values()) {
-      yaml += input.yaml(indent+2);
+      j.Ports.push(input.json());
     }
     for (let output of this.shape.outputs.values()) {
-      yaml += output.yaml(indent+2);
+      j.Ports.push(output.json());
     }
-    yaml += spaces + 'Properties:\n';
-    let sp = '- ';
+    j.Properties = {};
     for (let [name, value] of this.properties) {
-      yaml += spaces + sp + name + ': ' + value + '\n';
-      sp = '  ';
+      j.Properties[name] = value;
     }
-    return yaml;
+    return j;
   }
 }
 
@@ -402,23 +400,24 @@ class Connection {
     verticalCurve(p1, p2);
   }
 
-  yaml(indent) {
-    let spaces = ' '.repeat(indent) + '- ';
-    let yaml = spaces + 'Source:\n';
-    let spaces2 = ' '.repeat(indent+2);
-    yaml += spaces2 + '  Component: ' + this.frComp.label + '\n';
-    yaml += spaces2 + '  Port: ' + this.frPort + '\n';
-    yaml += spaces2 + 'Destination:\n';
-    yaml += spaces2 + '  Component: ' + this.toComp.label + '\n';
-    yaml += spaces2 + '  Port: ' + this.toPort + '\n';
-    return yaml;
+  json() {
+    return {
+      Source: {
+        Component: this.frComp.label,
+        Port: this.frPort
+      },
+      Destination: {
+        Component: this.toComp.label,
+        Port: this.toPort
+      }
+    };
   }
 }
 
 
 function restart() {
   bg = 80;
-  zoomLevel = 2;
+  zoomLevel = 1.5;
   inputCol = color(128, 255, 128);
   outputCol = color(255, 192, 192);
   buttondiv = select('#button-holder');
@@ -434,11 +433,6 @@ function restart() {
     {direction: 'output', type: 'OtelTraces', label: 'Dropped', col: outputCol}
   ], 150, 100, color(192, 192, 255));
   k.addProperty('SampleRate', 10);
-  k = addComponentKind('HoneycombExporter', [
-    {direction: 'input', type: 'OtelTraces', label: 'Traces', col: inputCol}
-  ], 180, 80, color(255, 255, 128));
-  k.addProperty('Dataset', 'mydataset');
-  k.addProperty('APIKey', '$HONEYCOMB_APIKEY');
   k = addComponentKind('EMAThroughputSampler', [
     {direction: 'input', type: 'OtelTraces', label: 'Input', col: inputCol},
     {direction: 'output', type: 'OtelTraces', label: 'Kept', col: outputCol},
@@ -446,23 +440,25 @@ function restart() {
   ], 150, 100, color(192, 192, 255));
   k.addProperty('TPS', 100);
   k.addProperty('KeyFields', 'key1, key2, key3');
+  k = addComponentKind('HoneycombExporter', [
+    {direction: 'input', type: 'OtelTraces', label: 'Traces', col: inputCol}
+  ], 180, 80, color(255, 255, 128));
+  k.addProperty('Dataset', 'mydataset');
+  k.addProperty('APIKey', '$HONEYCOMB_APIKEY');
 
-  c1 = new Component('TraceGRPC', 300, 100);
-  c2 = new Component('DeterministicSampler', 300, 300);
-  c3 = new Component('HoneycombExporter', 300, 500);
-  components = [c1, c2, c3];
-  let connection = new Connection(c1, 'TraceOut', c2, 'Input');
-  connections = [connection];
-  generateYaml();
+  components = [new Component('HoneycombExporter', 300, windowHeight*.35, 'ToHoneycomb')];
+
+  connections = [];
+  generateYAML();
 }
 
 function windowResized() {
-  resizeCanvas(windowWidth, windowHeight);
+  resizeCanvas(windowWidth, windowHeight*.7);
   restart();
 }
 
 function setup() {
-  let canvas = createCanvas(windowWidth, windowHeight);
+  let canvas = createCanvas(windowWidth, windowHeight*.7);
   canvas.parent('sketch-holder');
   restart();
 }
@@ -475,17 +471,45 @@ function keyTyped() {
     case 'r':
       restart();
       break;
+    case 'R':
+      connections = [];
+      break;
+    case 'd':
+      for (let component of components) {
+        if (component.hovering) {
+          let index = components.indexOf(component);
+          components.splice(index, 1);
+          break;
+        }
+      }
+      for (let i = connections.length-1; i >= 0; i--) {
+        let connection = connections[i];
+        let pf = connection.frComp.port(connection.frPort);
+        let pt = connection.toComp.port(connection.toPort);
+        if (pf.hovering || pt.hovering) {
+          connections.splice(i, 1);
+        }
+      }
+      break;
     case 'z':
       zoomLevel *= 1.25;
       break;
     case 'Z':
       zoomLevel *= 0.8;
       break;
+    case 'j':
+      saveJSON(generateJSON(), 'hpsf.json');
+      break;
+    case 'y':
+      save([window.toYAML(generateJSON())], 'hpsf.yaml');
+      break;
   }
 }
 
 function mousePressed() {
-  for (let component of components) {
+  // select in the reverse order so we get the one on top
+  for (let i = components.length-1; i >= 0; i--) {
+    let component = components[i];
     if (component.bodyHit(mouseX, mouseY)) {
       // print('pressed');
       dragComponent = component;
@@ -561,21 +585,24 @@ function mouseMoved() {
   }
 }
 
-function yaml() {
-  let yaml = 'Components:\n';
-  for (let component of components) {
-    yaml += component.yaml(2);
-  }
-  yaml += 'Connections:\n';
-  for (let connection of connections) {
-    yaml += connection.yaml(2);
-  }
-  return yaml;
+function generateYAML() {
+  let hpsf = select('#HPSF');
+  hpsfText = window.toYAML(generateJSON());
+  hpsf.html(hpsfText);
 }
 
-function generateYaml() {
-  let hpsf = select('#HPSF');
-  hpsf.html(yaml());
+function generateJSON() {
+  let j = {
+    Components: [],
+    Connections: []
+  };
+  for (let component of components) {
+    j.Components.push(component.json());
+  }
+  for (let connection of connections) {
+    j.Connections.push(connection.json());
+  }
+  return j;
 }
 
 function draw() {
@@ -598,7 +625,7 @@ function draw() {
   }
 
   if (changed) {
-    generateYaml();
+    generateYAML();
     changed = false;
   }
 
