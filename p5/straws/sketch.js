@@ -239,7 +239,10 @@ class Component {
     this.x = x;
     this.y = y;
     this.shape = new ComponentShape(x, y, ckind.w, ckind.h, this.label);
-    this.properties = ckind.properties;
+    this.properties = new Map();
+    for (let [name, value] of ckind.properties) {
+      this.properties.set(name, value);
+    }
     this.dragging = false;
     this.hovering = false;
     this.dragX = 0;
@@ -334,7 +337,8 @@ class Component {
     html += '<table>';
     // set up the table
     for (let [name, value] of this.properties) {
-      let tfield = '<input type="text" class="textfield" id="prop-' + name + '" value="' + value + '">';
+      let id = 'prop-' + this.label + '-' + name;
+      let tfield = '<input type="text" class="textfield" id="' + id + '" value="' + value + '">';
       html += '<tr><td class="propname">' + name + '</td><td class="propvalue">' + tfield + '</td></tr>';
     }
     html += '</table>';
@@ -342,7 +346,8 @@ class Component {
     container.html(html);
     // set up the event handlers
     for (let [name, value] of this.properties) {
-      let input = select('#prop-' + name);
+      let id = '#prop-' + this.label + '-' + name;
+      let input = select(id);
       input.changed(() => {
         this.properties.set(name, input.value());
         changed = true;
@@ -376,7 +381,6 @@ class Connection {
   constructor(frComp, frPort, toComp, toPort) {
     // always go from the output to the input
     let p = frComp.port(frPort);
-    print(frComp);
     if (frComp.port(frPort).direction == 'input') {
       // print('reversing connection');
       this.frComp = toComp;
@@ -407,8 +411,6 @@ class Connection {
     yaml += spaces2 + 'Destination:\n';
     yaml += spaces2 + '  Component: ' + this.toComp.label + '\n';
     yaml += spaces2 + '  Port: ' + this.toPort + '\n';
-    yaml += spaces + 'Properties:\n';
-    yaml += spaces2 + '  Color: "' + this.frComp.port(this.frPort).col.toString('#rrggbb') + '"\n';
     return yaml;
   }
 }
