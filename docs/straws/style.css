@@ -32,3 +32,29 @@ pre {
   border-radius: 5px;
   overflow-x: auto;
 }
+
+table {
+  margin-left: 2rem;
+  border-collapse: collapse;
+  width: 30rem;
+  margin-bottom: 20px;
+  background-color: beige;
+}
+
+.propname {
+  color: #000080;
+  width: 35%;
+}
+
+.propvalue {
+  text-align: left;
+  color: #1e90ff;
+}
+
+.textfield {
+  width: 90%;
+  padding: 5px;
+  margin: 5px 0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}

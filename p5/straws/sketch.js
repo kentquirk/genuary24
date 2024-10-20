@@ -3,6 +3,7 @@ let bg = 0;
 let zoomLevel = 1;
 let components = [];
 let connections = [];
+let componentKinds = new Map();
 let partialConnection = null;
 let dragComponent = null;
 let dragPort = null;
@@ -17,7 +18,7 @@ function verticalCurve(p1, p2) {
   c1.y = (p1.y + p2.y) / 2;
   c2.y = (p1.y + p2.y) / 2;
   noFill();
-  stroke(0);
+  stroke(240);
   strokeWeight(2);
   bezier(p1.x, p1.y, c1.x, c1.y, c2.x, c2.y, p2.x, p2.y);
   // line(p1.x, p1.y, p2.x, p2.y);
@@ -185,16 +186,65 @@ class ComponentShape extends Shape {
   }
 }
 
+class ComponentKind {
+  constructor(kind, ports, w, h, col) {
+    this.kind = kind;
+    this.ports = ports;
+    this.w = w;
+    this.h = h;
+    this.col = col;
+    this.labelNumber = 0;
+    this.properties = new Map();
+    componentKinds.set(kind, this);
+  }
+
+  addProperty(name, value) {
+    this.properties.set(name, value);
+  }
+
+  addPortsTo(component) {
+    for (let port of this.ports) {
+      if (port.direction === 'input') {
+        component.addInput(port.type, port.label, port.col);
+      } else {
+        component.addOutput(port.type, port.label, port.col);
+      }
+    }
+  }
+}
+
+function addComponentKind(kind, ports, w=150, h=50, col=200) {
+  let k = new ComponentKind(kind, ports, w, h, col);
+  button = createButton(kind);
+  buttondiv = select('#button-holder');
+  button.parent(buttondiv);
+  let createComponent = () => {
+    let c = new Component(kind, 250+10*(k.labelNumber+1), 200+10*(k.labelNumber+1));
+    components.push(c);
+    changed = true;
+  }
+  button.mousePressed(createComponent);
+  return k;
+}
+
 class Component {
-  constructor(label, x, y) {
+  constructor(kind, x, y, label='') {
+    let ckind = componentKinds.get(kind);
+    this.kind = kind;
     this.label = label;
+    if (label === '') {
+      ckind.labelNumber += 1;
+      this.label = kind + '_' + ckind.labelNumber;
+    }
     this.x = x;
     this.y = y;
-    this.shape = new ComponentShape(x, y, 150, 50, label);
+    this.shape = new ComponentShape(x, y, ckind.w, ckind.h, this.label);
+    this.properties = ckind.properties;
     this.dragging = false;
     this.hovering = false;
     this.dragX = 0;
     this.dragY = 0;
+    ckind.addPortsTo(this);
   }
 
   addInput(type, label, col) {
@@ -206,10 +256,11 @@ class Component {
   }
 
   draw() {
+    let ckind = componentKinds.get(this.kind);
     if (this.hovering) {
-      this.shape.bodyfill = color(255, 255, 0);
+      this.shape.bodyfill = lerpColor(ckind.col, color(255), 0.5);
     } else {
-      this.shape.bodyfill = color(255);
+      this.shape.bodyfill = ckind.col;
     }
     this.shape.draw();
   }
@@ -277,16 +328,45 @@ class Component {
     }
   }
 
+  select() {
+    let container = select('#selected-component');
+    let html = '<h3>' + this.label + '</h3>';
+    html += '<table>';
+    // set up the table
+    for (let [name, value] of this.properties) {
+      let tfield = '<input type="text" class="textfield" id="prop-' + name + '" value="' + value + '">';
+      html += '<tr><td class="propname">' + name + '</td><td class="propvalue">' + tfield + '</td></tr>';
+    }
+    html += '</table>';
+    // add the table to the container
+    container.html(html);
+    // set up the event handlers
+    for (let [name, value] of this.properties) {
+      let input = select('#prop-' + name);
+      input.changed(() => {
+        this.properties.set(name, input.value());
+        changed = true;
+      });
+    }
+  }
+
   yaml(indent) {
     let spaces = ' '.repeat(indent) + '- ';
     let yaml = spaces + 'Name: ' + this.label + '\n';
     spaces = ' '.repeat(indent+2);
+    yaml += spaces + 'Kind: ' + this.kind + '\n';
     yaml += spaces + 'Ports:\n';
     for (let input of this.shape.inputs.values()) {
       yaml += input.yaml(indent+2);
     }
     for (let output of this.shape.outputs.values()) {
       yaml += output.yaml(indent+2);
+    }
+    yaml += spaces + 'Properties:\n';
+    let sp = '- ';
+    for (let [name, value] of this.properties) {
+      yaml += spaces + sp + name + ': ' + value + '\n';
+      sp = '  ';
     }
     return yaml;
   }
@@ -335,19 +415,39 @@ class Connection {
 
 
 function restart() {
-  bg = 128;
+  bg = 80;
   zoomLevel = 2;
-  inputCol = color(128, 128, 255);
-  outputCol = color(255, 128, 128);
+  inputCol = color(128, 255, 128);
+  outputCol = color(255, 192, 192);
+  buttondiv = select('#button-holder');
+  buttondiv.html('');
 
-  c1 = new Component('TraceGRPC', 100, 100);
-  c1.addOutput('OtelTraces', 'TraceOut', outputCol);
-  c2 = new Component('DeterministicSampler', 100, 300);
-  c2.addInput('OtelTraces', 'Input', inputCol);
-  c2.addOutput('OtelTraces', 'Kept', outputCol);
-  c2.addOutput('OtelTraces', 'Dropped', outputCol);
-  c3 = new Component('HoneycombExporter', 100, 500);
-  c3.addInput('OtelTraces', 'Traces', inputCol);
+  let k = addComponentKind('TraceGRPC', [
+    {direction: 'output', type: 'OtelTraces', label: 'TraceOut', col: outputCol}
+  ], 100, 70, color(128, 255, 128));
+  k.addProperty('Port', 4317);
+  k = addComponentKind('DeterministicSampler', [
+    {direction: 'input', type: 'OtelTraces', label: 'Input', col: inputCol},
+    {direction: 'output', type: 'OtelTraces', label: 'Kept', col: outputCol},
+    {direction: 'output', type: 'OtelTraces', label: 'Dropped', col: outputCol}
+  ], 150, 100, color(192, 192, 255));
+  k.addProperty('SampleRate', 10);
+  k = addComponentKind('HoneycombExporter', [
+    {direction: 'input', type: 'OtelTraces', label: 'Traces', col: inputCol}
+  ], 180, 80, color(255, 255, 128));
+  k.addProperty('Dataset', 'mydataset');
+  k.addProperty('APIKey', '$HONEYCOMB_APIKEY');
+  k = addComponentKind('EMAThroughputSampler', [
+    {direction: 'input', type: 'OtelTraces', label: 'Input', col: inputCol},
+    {direction: 'output', type: 'OtelTraces', label: 'Kept', col: outputCol},
+    {direction: 'output', type: 'OtelTraces', label: 'Dropped', col: outputCol}
+  ], 150, 100, color(192, 192, 255));
+  k.addProperty('TPS', 100);
+  k.addProperty('KeyFields', 'key1, key2, key3');
+
+  c1 = new Component('TraceGRPC', 300, 100);
+  c2 = new Component('DeterministicSampler', 300, 300);
+  c3 = new Component('HoneycombExporter', 300, 500);
   components = [c1, c2, c3];
   let connection = new Connection(c1, 'TraceOut', c2, 'Input');
   connections = [connection];
@@ -400,6 +500,15 @@ function mousePressed() {
   }
 }
 
+function mouseClicked() {
+  // print('clicked');
+  for (let component of components) {
+    if (component.bodyHit(mouseX, mouseY)) {
+      component.select();
+    }
+  }
+}
+
 function mouseReleased() {
   if (dragComponent) {
     dragComponent.endDrag();
@@ -407,10 +516,12 @@ function mouseReleased() {
   }
   partialConnection = null;
   if (dragPort) {
+    // print('dragPort', dragPort);
     dragPort.hovering = false;
     for (let component of components) {
       let port = component.portHit(mouseX, mouseY);
-      if (port && port !== dragPort && port.parent !== dragPort.parent && port.type !== dragPort.type) {
+      // print('port', port);
+      if (port && port !== dragPort && port.parent !== dragPort.parent && port.direction !== dragPort.direction) {
         // print('connecting', dragPort, 'to', port);
         let connection = new Connection(dragPort.parent, dragPort.label, component, port.label);
         connections.push(connection);
