@@ -213,7 +213,12 @@ class Component {
             let id = '#prop-' + this.label + '-' + name;
             let input = select(id);
             input.changed(() => {
-                this.properties.set(name, input.value());
+                // don't turn numbers into strings
+                if (typeof(this.properties.get(name)) === 'number') {
+                    this.properties.set(name, parseFloat(input.value()));
+                } else {
+                    this.properties.set(name, input.value());
+                }
                 changed = true;
             });
         }
