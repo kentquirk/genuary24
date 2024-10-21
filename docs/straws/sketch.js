@@ -34,7 +34,7 @@ function restart() {
     {direction: 'input', type: 'OtelTraces', label: 'Input', col: inputCol},
     {direction: 'output', type: 'OtelTraces', label: 'Kept', col: outputCol},
     {direction: 'output', type: 'OtelTraces', label: 'Dropped', col: outputCol}
-  ], 150, 100, color(192, 192, 255));
+  ], 170, 120, color(192, 222, 255));
   k.addProperty('TPS', 100);
   k.addProperty('KeyFields', 'key1, key2, key3');
   k = addComponentKind('HoneycombExporter', [
