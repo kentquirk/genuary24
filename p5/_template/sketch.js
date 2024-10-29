@@ -1,5 +1,3 @@
-let width = 900;
-let height = 900;
 let paused = false;
 
 function restart() {
@@ -8,6 +6,17 @@ function restart() {
 function windowResized() {
   resizeCanvas(windowWidth, windowHeight);
   restart();
+}
+
+function keyTyped() {
+  switch (key) {
+    case ' ':
+      paused = !paused;
+      break;
+    case 'r':
+      restart();
+      break;
+  }
 }
 
 function setup() {
@@ -19,14 +28,6 @@ function setup() {
 function draw() {
   clear();
   background(0);
-
-  if (kb.presses(' ')) {
-    paused = !paused;
-  }
-
-  if (kb.presses('r')) {
-    restart();
-  }
 
   if (!paused) {
   }

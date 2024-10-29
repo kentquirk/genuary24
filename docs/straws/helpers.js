@@ -20,14 +20,14 @@ function verticalCurve(p1, p2) {
 
   function generateJSON() {
     let j = {
-      Components: [],
-      Connections: []
+      components: [],
+      connections: []
     };
     for (let component of components) {
-      j.Components.push(component.json());
+      j.components.push(component.json());
     }
     for (let connection of connections) {
-      j.Connections.push(connection.json());
+      j.connections.push(connection.json());
     }
     return j;
   }

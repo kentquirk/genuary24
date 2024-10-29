@@ -24,7 +24,15 @@ class Port {
         if (this.hovering) {
             stroke(0);
         }
-        ellipse(this.x, this.y + offset, 2 * this.portRadius);
+        circle(this.x, this.y + offset, 2 * this.portRadius);
+        if (this.direction === 'output') {
+            fill(0);
+            circle(this.x, this.y + offset, this.portRadius * 2 / 3);
+        }
+        if (this.direction === 'input') {
+            fill(0);
+            rect(this.x, this.y + offset, this.portRadius * 2 / 3, this.portRadius * 2 / 3);
+        }
         noStroke();
         fill(this.textFill);
         textSize(9);
@@ -42,9 +50,9 @@ class Port {
 
     json() {
         return {
-            Name: this.label,
-            Direction: this.direction,
-            Type: this.type
+            name: this.label,
+            direction: this.direction,
+            type: this.type
         };
     }
 }
@@ -68,10 +76,11 @@ class ComponentKind {
 
     addPortsTo(component) {
         for (let port of this.ports) {
+            let col = typecolors.get(port.type);
             if (port.direction === 'input') {
-                component.addInput(port.type, port.label, port.col);
+                component.addInput(port.type, port.label, col);
             } else {
-                component.addOutput(port.type, port.label, port.col);
+                component.addOutput(port.type, port.label, col);
             }
         }
     }
@@ -214,7 +223,7 @@ class Component {
             let input = select(id);
             input.changed(() => {
                 // don't turn numbers into strings
-                if (typeof(this.properties.get(name)) === 'number') {
+                if (typeof (this.properties.get(name)) === 'number') {
                     this.properties.set(name, parseFloat(input.value()));
                 } else {
                     this.properties.set(name, input.value());
@@ -226,19 +235,29 @@ class Component {
 
     json() {
         let j = {
-            Name: this.label,
-            Kind: this.kind,
-            Ports: []
+            name: this.label,
+            kind: this.kind,
+            ports: []
         };
         for (let input of this.shape.inputs.values()) {
-            j.Ports.push(input.json());
+            j.ports.push(input.json());
         }
         for (let output of this.shape.outputs.values()) {
-            j.Ports.push(output.json());
+            j.ports.push(output.json());
         }
-        j.Properties = {};
+        j.properties = [];
         for (let [name, value] of this.properties) {
-            j.Properties[name] = value;
+            if (value === 'true') {
+                value = true;
+            } else if (value === 'false') {
+                value = false;
+            } else {
+                let n = parseFloat(value);
+                if (!isNaN(n)) {
+                    value = n;
+                }
+            }
+            j.properties.push({ name: name, value: value, type: typeof (value) });
         }
         return j;
     }
@@ -272,13 +291,13 @@ class Connection {
 
     json() {
         return {
-            Source: {
-                Component: this.frComp.label,
-                Port: this.frPort
+            source: {
+                component: this.frComp.label,
+                port: this.frPort
             },
-            Destination: {
-                Component: this.toComp.label,
-                Port: this.toPort
+            destination: {
+                component: this.toComp.label,
+                port: this.toPort
             }
         };
     }

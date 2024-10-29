@@ -12,6 +12,8 @@ let textCol = 0;
 let changed = false;
 let hpsfText = '';
 
+let typecolors = new Map();
+
 function restart() {
   bg = 80;
   zoomLevel = 1.5;
@@ -20,30 +22,67 @@ function restart() {
   buttondiv = select('#button-holder');
   buttondiv.html('');
 
+  typecolors.set('Honeycomb', color(255, 192, 255));
+  typecolors.set('OTelTraces', color(192, 192, 255));
+  typecolors.set('OTelLogs', color(255, 255, 192));
+
   let k = addComponentKind('TraceGRPC', [
-    {direction: 'output', type: 'OtelTraces', label: 'TraceOut', col: outputCol}
+    {direction: 'output', type: 'OTelTraces', label: 'TraceOut'}
   ], 100, 70, color(128, 255, 128));
   k.addProperty('Port', 4317);
+  k = addComponentKind('RefineryGRPC', [
+    {direction: 'output', type: 'Honeycomb', label: 'TraceOut'}
+  ], 100, 70, color(128, 255, 128));
+  k.addProperty('Port', 4317);
+  k = addComponentKind('RefineryHTTP', [
+    {direction: 'output', type: 'Honeycomb', label: 'TraceOut'}
+  ], 100, 70, color(128, 255, 128));
+  k.addProperty('Port', 8080);
+  k = addComponentKind('LogsHTTP', [
+    {direction: 'output', type: 'OTelLogs', label: 'LogsOut'}
+  ], 100, 70, color(128, 240, 240));
+  k.addProperty('Port', 8080);
+  k = addComponentKind('LogSplitter', [
+    {direction: 'input', type: 'OTelLogs', label: 'Input'},
+    {direction: 'output', type: 'OTelTraces', label: 'Has TraceID'},
+    {direction: 'output', type: 'OTelLogs', label: 'No TraceID'}
+  ], 150, 100, color(140, 140, 255));
+  k.addProperty('TraceIDField', 'trace.trace_id');
   k = addComponentKind('DeterministicSampler', [
-    {direction: 'input', type: 'OtelTraces', label: 'Input', col: inputCol},
-    {direction: 'output', type: 'OtelTraces', label: 'Kept', col: outputCol},
-    {direction: 'output', type: 'OtelTraces', label: 'Dropped', col: outputCol}
+    {direction: 'input', type: 'Honeycomb', label: 'Input'},
+    {direction: 'output', type: 'Honeycomb', label: 'Kept'},
+    {direction: 'output', type: 'Honeycomb', label: 'Dropped'}
   ], 150, 100, color(192, 192, 255));
+  k.addProperty('Environment', '__default__');
   k.addProperty('SampleRate', 10);
   k = addComponentKind('EMAThroughputSampler', [
-    {direction: 'input', type: 'OtelTraces', label: 'Input', col: inputCol},
-    {direction: 'output', type: 'OtelTraces', label: 'Kept', col: outputCol},
-    {direction: 'output', type: 'OtelTraces', label: 'Dropped', col: outputCol}
+    {direction: 'input', type: 'Honeycomb', label: 'Input'},
+    {direction: 'output', type: 'Honeycomb', label: 'Kept'},
+    {direction: 'output', type: 'Honeycomb', label: 'Dropped'}
   ], 170, 120, color(192, 222, 255));
   k.addProperty('TPS', 100);
   k.addProperty('KeyFields', 'key1, key2, key3');
   k = addComponentKind('HoneycombExporter', [
-    {direction: 'input', type: 'OtelTraces', label: 'Traces', col: inputCol}
+    {direction: 'input', type: 'Honeycomb', label: 'Traces'}
   ], 180, 80, color(255, 255, 128));
-  k.addProperty('Dataset', 'mydataset');
+  k.addProperty('Dataset', 'mytraces');
+  k.addProperty('APIKey', '$HONEYCOMB_APIKEY');
+  k = addComponentKind('OTelTraceExporter', [
+    {direction: 'input', type: 'OTelTraces', label: 'Traces'}
+  ], 180, 80, color(255, 255, 128));
+  k.addProperty('Dataset', 'mytraces');
+  k.addProperty('APIKey', '$HONEYCOMB_APIKEY');
+  k = addComponentKind('OTelLogExporter', [
+    {direction: 'input', type: 'OTelLogs', label: 'Logs'}
+  ], 180, 80, color(255, 222, 128));
+  k.addProperty('Dataset', 'mylogs');
+  k.addProperty('APIKey', '$HONEYCOMB_APIKEY');
+  k = addComponentKind('LogStorage', [
+    {direction: 'input', type: 'OTelLogs', label: 'Logs'}
+  ], 180, 80, color(128, 222, 255));
   k.addProperty('APIKey', '$HONEYCOMB_APIKEY');
 
-  components = [new Component('HoneycombExporter', 300, windowHeight*.35, 'ToHoneycomb')];
+  components = [];
 
   connections = [];
   generateYAML();
@@ -151,7 +190,8 @@ function mouseReleased() {
     for (let component of components) {
       let port = component.portHit(mouseX, mouseY);
       // print('port', port);
-      if (port && port !== dragPort && port.parent !== dragPort.parent && port.direction !== dragPort.direction) {
+      if (port && port !== dragPort && port.parent !== dragPort.parent &&
+        port.direction !== dragPort.direction && port.type === dragPort.type) {
         // print('connecting', dragPort, 'to', port);
         let connection = new Connection(dragPort.parent, dragPort.label, component, port.label);
         connections.push(connection);
