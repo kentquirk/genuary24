@@ -42,8 +42,8 @@ class ComponentShape extends Shape {
         let nInputs = this.inputs.size;
         let i = 0;
         for (let input of this.inputs.values()) {
-            let x = -this.w / 2 + (i + 1) * this.w / (nInputs + 1);
-            let y = -this.h / 2;
+            let x = -this.w / 2;
+            let y = -this.h / 2 + (i + 1) * this.h / (nInputs + 1);
             input.x = x;
             input.y = y;
             i++;
@@ -52,8 +52,8 @@ class ComponentShape extends Shape {
         let nOutputs = this.outputs.size;
         i = 0;
         for (let output of this.outputs.values()) {
-            let x = -this.w / 2 + (i + 1) * this.w / (nOutputs + 1);
-            let y = this.h / 2;
+            let x = this.w / 2;
+            let y = -this.h / 2 + (i + 1) * this.h / (nOutputs + 1);
             output.x = x;
             output.y = y;
             i++;
@@ -66,9 +66,9 @@ class ComponentShape extends Shape {
         fill(this.bodyfill);
         rect(0, 0, this.w, this.h);
         fill(this.textFill);
-        textAlign(CENTER, CENTER);
+        textAlign(CENTER, TOP);
         textSize(12);
-        text(this.label, 0, 0);
+        text(this.label, 0, -this.h / 2 + 5);
         for (let input of this.inputs.values()) {
             input.draw();
         }

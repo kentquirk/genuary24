@@ -241,7 +241,7 @@ function draw() {
   if (partialConnection) {
     let p1 = partialConnection.parent.portPosition(partialConnection.label);
     let p2 = createVector(mouseX/zoomLevel, mouseY/zoomLevel);
-    verticalCurve(p1, p2);
+    bestCurve(p1, p2);
   }
 
   for (let component of components) {

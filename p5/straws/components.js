@@ -14,29 +14,29 @@ class Port {
 
     // draw the port
     draw() {
-        let align = BOTTOM;
         let offset = this.portRadius;
         if (this.direction === 'input') {
-            align = TOP;
             offset = -this.portRadius;
         }
         fill(this.col);
         if (this.hovering) {
             stroke(0);
         }
-        circle(this.x, this.y + offset, 2 * this.portRadius);
+        circle(this.x + offset, this.y, 2 * this.portRadius);
         if (this.direction === 'output') {
             fill(0);
-            circle(this.x, this.y + offset, this.portRadius * 2 / 3);
+            circle(this.x + offset, this.y, this.portRadius * 2 / 3);
+            textAlign(RIGHT, CENTER);
         }
         if (this.direction === 'input') {
             fill(0);
-            rect(this.x, this.y + offset, this.portRadius * 2 / 3, this.portRadius * 2 / 3);
+            rect(this.x + offset, this.y, this.portRadius * 2 / 3, this.portRadius * 2 / 3);
+            textAlign(LEFT, CENTER);
         }
         noStroke();
         fill(this.textFill);
         textSize(9);
-        text(this.label, this.x, this.y - offset);
+        text(this.label, this.x - offset, this.y);
     }
 
     // ask if x, y is inside the port
@@ -45,7 +45,7 @@ class Port {
         if (this.direction === 'input') {
             offset = -this.portRadius;
         }
-        return dist(x, y, this.x, this.y + offset) <= this.portRadius;
+        return dist(x, y, this.x + offset, this.y) <= this.portRadius;
     }
 
     json() {
@@ -177,7 +177,11 @@ class Component {
     portPosition(portLabel) {
         let p = this.port(portLabel);
         if (p !== null) {
-            return createVector(this.x + p.x, this.y + p.y);
+            let offset = p.portRadius;
+            if (p.direction === 'input') {
+                offset = -p.portRadius;
+            }
+            return createVector(this.x + p.x + offset, this.y + p.y);
         }
         print('port not found', portLabel, this.inputs, this.outputs);
         return null;
@@ -286,7 +290,7 @@ class Connection {
     draw() {
         let p1 = this.frComp.portPosition(this.frPort);
         let p2 = this.toComp.portPosition(this.toPort);
-        verticalCurve(p1, p2);
+        bestCurve(p1, p2);
     }
 
     json() {

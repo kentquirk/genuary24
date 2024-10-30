@@ -12,6 +12,27 @@ function verticalCurve(p1, p2) {
     noStroke(0);
   }
 
+  function horizontalCurve(p1, p2) {
+    let c1 = p1.copy();
+    let c2 = p2.copy();
+    c1.x = (p1.x + p2.x) / 2;
+    c2.x = (p1.x + p2.x) / 2;
+    noFill();
+    stroke(240);
+    strokeWeight(2);
+    bezier(p1.x, p1.y, c1.x, c1.y, c2.x, c2.y, p2.x, p2.y);
+    // line(p1.x, p1.y, p2.x, p2.y);
+    noStroke(0);
+  }
+
+  function bestCurve(p1, p2) {
+    if (Math.abs(p1.x - p2.x) > Math.abs(p1.y - p2.y)) {
+      horizontalCurve(p1, p2);
+    } else {
+      verticalCurve(p1, p2);
+    }
+  }
+
   function generateYAML() {
     let hpsf = select('#HPSF');
     hpsfText = window.toYAML(generateJSON());
