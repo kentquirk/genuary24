@@ -48,6 +48,10 @@ function restart() {
     {direction: 'output', type: 'OTelLogs', label: 'No TraceID'}
   ], 150, 100, color(140, 140, 255));
   k.addProperty('TraceIDField', 'trace.trace_id');
+  k = addComponentKind('TraceConverter', [
+    {direction: 'input', type: 'OTelTraces', label: 'Input'},
+    {direction: 'output', type: 'Honeycomb', label: 'Output'}
+  ], 150, 100, color(192, 255, 192));
   k = addComponentKind('DeterministicSampler', [
     {direction: 'input', type: 'Honeycomb', label: 'Input'},
     {direction: 'output', type: 'Honeycomb', label: 'Kept'},
@@ -82,10 +86,7 @@ function restart() {
   ], 180, 80, color(128, 222, 255));
   k.addProperty('APIKey', '$HONEYCOMB_APIKEY');
 
-  components = [];
-
-  connections = [];
-  generateYAML();
+  generateYAML(windowWidth, windowHeight);
 }
 
 function windowResized() {
@@ -96,6 +97,9 @@ function windowResized() {
 function setup() {
   let canvas = createCanvas(windowWidth, windowHeight*.7);
   canvas.parent('sketch-holder');
+
+  components = [];
+  connections = [];
   restart();
 }
 
@@ -141,10 +145,10 @@ function keyTyped() {
       zoomLevel *= 0.8;
       break;
     case 'j':
-      saveJSON(generateJSON(), 'hpsf.json');
+      saveJSON(generateJSON(windowWidth, windowHeight), 'hpsf.json');
       break;
     case 'y':
-      save([window.toYAML(generateJSON())], 'hpsf.yaml');
+      save([window.toYAML(generateJSON(windowWidth, windowHeight))], 'hpsf.yaml');
       break;
   }
 }
@@ -249,7 +253,7 @@ function draw() {
   }
 
   if (changed) {
-    generateYAML();
+    generateYAML(windowWidth, windowHeight);
     changed = false;
   }
 

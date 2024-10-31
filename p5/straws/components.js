@@ -297,11 +297,13 @@ class Connection {
         return {
             source: {
                 component: this.frComp.label,
-                port: this.frPort
+                port: this.frPort,
+                type: this.frComp.port(this.frPort).type
             },
             destination: {
                 component: this.toComp.label,
-                port: this.toPort
+                port: this.toPort,
+                type: this.toComp.port(this.toPort).type
             }
         };
     }
