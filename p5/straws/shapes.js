@@ -17,24 +17,24 @@ class Shape {
 }
 
 class ComponentShape extends Shape {
-    constructor(x, y, w, h, label) {
+    constructor(x, y, w, h, name) {
         super(x, y);
         this.w = w;
         this.h = h;
-        this.label = label;
+        this.name = name;
         this.inputs = new Map();
         this.outputs = new Map();
         this.bodyfill = 255;
         this.textFill = textCol;
     }
 
-    addInput(parent, type, label, col) {
-        this.inputs.set(label, new Port(parent, type, 'input', label, col));
+    addInput(parent, type, name, col) {
+        this.inputs.set(name, new Port(parent, type, 'input', name, col));
         this._layoutPorts();
     }
 
-    addOutput(parent, type, label, col) {
-        this.outputs.set(label, new Port(parent, type, 'output', label, col));
+    addOutput(parent, type, name, col) {
+        this.outputs.set(name, new Port(parent, type, 'output', name, col));
         this._layoutPorts();
     }
 
@@ -68,7 +68,7 @@ class ComponentShape extends Shape {
         fill(this.textFill);
         textAlign(CENTER, TOP);
         textSize(12);
-        text(this.label, 0, -this.h / 2 + 5);
+        text(this.name, 0, -this.h / 2 + 5);
         for (let input of this.inputs.values()) {
             input.draw();
         }

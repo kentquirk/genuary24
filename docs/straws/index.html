@@ -17,7 +17,11 @@
       function toYAML(obj) {
         return YAML.stringify(obj);
       }
+      function fromYAML(str) {
+        return YAML.parse(str);
+      }
       window.toYAML = toYAML;
+      window.fromYAML = fromYAML;
     </script>
     <script src="helpers.js"></script>
     <script src="shapes.js"></script>

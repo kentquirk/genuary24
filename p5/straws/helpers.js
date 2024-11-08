@@ -56,7 +56,7 @@ function verticalCurve(p1, p2) {
     j.layout.components = [];
     for (let component of components) {
       j.layout.components.push({
-        label: component.label,
+        name: component.name,
         x: component.x,
         y: component.y
       });

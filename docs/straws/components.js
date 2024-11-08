@@ -1,9 +1,9 @@
 class Port {
-    constructor(parent, type, direction, label, col) {
+    constructor(parent, type, direction, name, col) {
         this.type = type;
         this.parent = parent;
         this.direction = direction;
-        this.label = label;
+        this.name = name;
         this.col = col;
         this.x = 0;
         this.y = 0;
@@ -36,7 +36,7 @@ class Port {
         noStroke();
         fill(this.textFill);
         textSize(9);
-        text(this.label, this.x - offset, this.y);
+        text(this.name, this.x - offset, this.y);
     }
 
     // ask if x, y is inside the port
@@ -50,7 +50,7 @@ class Port {
 
     json() {
         return {
-            name: this.label,
+            name: this.name,
             direction: this.direction,
             type: this.type
         };
@@ -65,7 +65,7 @@ class ComponentKind {
         this.w = w;
         this.h = h;
         this.col = col;
-        this.labelNumber = 0;
+        this.nameIndex = 0;
         this.properties = new Map();
         componentKinds.set(kind, this);
     }
@@ -78,9 +78,9 @@ class ComponentKind {
         for (let port of this.ports) {
             let col = typecolors.get(port.type);
             if (port.direction === 'input') {
-                component.addInput(port.type, port.label, col);
+                component.addInput(port.type, port.name, col);
             } else {
-                component.addOutput(port.type, port.label, col);
+                component.addOutput(port.type, port.name, col);
             }
         }
     }
@@ -92,7 +92,7 @@ function addComponentKind(kind, ports, w = 150, h = 50, col = 200) {
     buttondiv = select('#button-holder');
     button.parent(buttondiv);
     let createComponent = () => {
-        let c = new Component(kind, 250 + 10 * (k.labelNumber + 1), 200 + 10 * (k.labelNumber + 1));
+        let c = new Component(kind, 250 + 10 * (k.nameIndex + 1), 200 + 10 * (k.nameIndex + 1));
         components.push(c);
         changed = true;
     }
@@ -101,17 +101,17 @@ function addComponentKind(kind, ports, w = 150, h = 50, col = 200) {
 }
 
 class Component {
-    constructor(kind, x, y, label = '') {
+    constructor(kind, x, y, name = '') {
         let ckind = componentKinds.get(kind);
         this.kind = kind;
-        this.label = label;
-        if (label === '') {
-            ckind.labelNumber += 1;
-            this.label = kind + '_' + ckind.labelNumber;
+        this.name = name;
+        if (name === '') {
+            ckind.nameIndex += 1;
+            this.name = kind + '_' + ckind.nameIndex;
         }
         this.x = x;
         this.y = y;
-        this.shape = new ComponentShape(x, y, ckind.w, ckind.h, this.label);
+        this.shape = new ComponentShape(x, y, ckind.w, ckind.h, this.name);
         this.properties = new Map();
         for (let [name, value] of ckind.properties) {
             this.properties.set(name, value);
@@ -123,12 +123,12 @@ class Component {
         ckind.addPortsTo(this);
     }
 
-    addInput(type, label, col) {
-        this.shape.addInput(this, type, label, col);
+    addInput(type, name, col) {
+        this.shape.addInput(this, type, name, col);
     }
 
-    addOutput(type, label, col) {
-        this.shape.addOutput(this, type, label, col);
+    addOutput(type, name, col) {
+        this.shape.addOutput(this, type, name, col);
     }
 
     draw() {
@@ -159,23 +159,23 @@ class Component {
         return this.shape.portHit(x, y);
     }
 
-    port(label) {
+    port(name) {
         for (let input of this.shape.inputs.values()) {
-            if (input.label === label) {
+            if (input.name === name) {
                 return input;
             }
         }
         for (let output of this.shape.outputs.values()) {
-            if (output.label === label) {
+            if (output.name === name) {
                 return output;
             }
         }
-        print('port not found', label, this.inputs, this.outputs);
+        print('port not found', name, this.inputs, this.outputs);
         return null;
     }
 
-    portPosition(portLabel) {
-        let p = this.port(portLabel);
+    portPosition(portName) {
+        let p = this.port(portName);
         if (p !== null) {
             let offset = p.portRadius;
             if (p.direction === 'input') {
@@ -183,7 +183,7 @@ class Component {
             }
             return createVector(this.x + p.x + offset, this.y + p.y);
         }
-        print('port not found', portLabel, this.inputs, this.outputs);
+        print('port not found', portName, this.inputs, this.outputs);
         return null;
     }
 
@@ -210,11 +210,11 @@ class Component {
 
     select() {
         let container = select('#selected-component');
-        let html = '<h3>' + this.label + '</h3>';
+        let html = '<h3>' + this.name + '</h3>';
         html += '<table id="property-table">';
         // set up the table
         for (let [name, value] of this.properties) {
-            let id = 'prop-' + this.label + '-' + name;
+            let id = 'prop-' + this.name + '-' + name;
             let tfield = '<input type="text" class="textfield" id="' + id + '" value="' + value + '">';
             html += '<tr><td class="propname">' + name + '</td><td class="propvalue">' + tfield + '</td></tr>';
         }
@@ -223,7 +223,7 @@ class Component {
         container.html(html);
         // set up the event handlers
         for (let [name, value] of this.properties) {
-            let id = '#prop-' + this.label + '-' + name;
+            let id = '#prop-' + this.name + '-' + name;
             let input = select(id);
             input.changed(() => {
                 // don't turn numbers into strings
@@ -239,7 +239,7 @@ class Component {
 
     json() {
         let j = {
-            name: this.label,
+            name: this.name,
             kind: this.kind,
             ports: []
         };
@@ -296,12 +296,14 @@ class Connection {
     json() {
         return {
             source: {
-                component: this.frComp.label,
-                port: this.frPort
+                component: this.frComp.name,
+                port: this.frPort,
+                type: this.frComp.port(this.frPort).type
             },
             destination: {
-                component: this.toComp.label,
-                port: this.toPort
+                component: this.toComp.name,
+                port: this.toPort,
+                type: this.toComp.port(this.toPort).type
             }
         };
     }

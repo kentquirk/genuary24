@@ -33,13 +33,13 @@ function verticalCurve(p1, p2) {
     }
   }
 
-  function generateYAML() {
+  function generateYAML(winW, winH) {
     let hpsf = select('#HPSF');
-    hpsfText = window.toYAML(generateJSON());
+    hpsfText = window.toYAML(generateJSON(winW, winH));
     hpsf.html(hpsfText);
   }
 
-  function generateJSON() {
+  function generateJSON(winW, winH) {
     let j = {
       components: [],
       connections: []
@@ -49,6 +49,17 @@ function verticalCurve(p1, p2) {
     }
     for (let connection of connections) {
       j.connections.push(connection.json());
+    }
+    j.layout = {
+      frame: { width: winW, height: winH }
+    };
+    j.layout.components = [];
+    for (let component of components) {
+      j.layout.components.push({
+        name: component.name,
+        x: component.x,
+        y: component.y
+      });
     }
     return j;
   }
