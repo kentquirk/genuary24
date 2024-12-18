@@ -8,12 +8,6 @@ let currentFunctionBlock = null;
 let sketch;
 
 let helpers = {
-  sin: function (t) {
-    return 0.5 + 0.5 * sin(t * 360);
-  },
-  cos: function (t) {
-    return 0.5 + 0.5 * cos(t * 360);
-  },
   linear: (k = 1) => {
     return (t, v1, v2) => {
       if (typeof v1 !== "undefined" && typeof v2 !== "undefined") {
@@ -60,14 +54,23 @@ let helpers = {
 };
 
 let functionTable = [
-  () => makeSinFunctor(Math.floor(random(1,6)), 1.0),
-  () => makeCosFunctor(Math.floor(random(1,6)), 1.0),
-  () => helpers.linear(),
-  () => helpers.constant(),
-  () => helpers.quadratic,
-  () => helpers.cubic,
-  () => helpers.cubicBezier,
+  {name: "sin", f: () => makeSinFunctor(Math.floor(random(1,6)), 1.0)},
+  {name: "cos", f: () => makeCosFunctor(Math.floor(random(1,6)), 1.0)},
+  {name: "linear", f: (k) => helpers.linear(k)},
+  {name: "constant", f: (k) => helpers.constant(k)},
+  {name: "quadratic", f: () => helpers.quadratic},
+  {name: "cubic", f: () => helpers.cubic},
+  {name: "Bezier", f: () => helpers.cubicBezier},
 ];
+
+function lookupFunction(name) {
+  for (let i = 0; i < functionTable.length; i++) {
+    if (functionTable[i].name === name) {
+      return i;
+    }
+  }
+  return 0;
+}
 
 function compose(a, b) {
   return (t) => a(b(t));
@@ -85,7 +88,7 @@ function adjustedComposition(a, b) {
   return (t) => (f(t) - ymin) / (ymax - ymin);
 }
 
-function makeSinFunctor(frequency, amplitude=1.0) {
+function makeSinFunctor(amplitude=1.0, frequency=1.0) {
   return (t, v1, v2) => {
     if (typeof v1 !== 'undefined' && typeof v2 !== 'undefined') {
       amplitude = v1;
@@ -95,7 +98,7 @@ function makeSinFunctor(frequency, amplitude=1.0) {
   }
 }
 
-function makeCosFunctor(frequency, amplitude=1.0) {
+function makeCosFunctor(amplitude=1.0, frequency=1.0) {
   return (t, v1, v2) => {
     if (typeof v1 !== 'undefined' && typeof v2 !== 'undefined') {
       amplitude = v1;
@@ -114,7 +117,7 @@ class parameter {
     this.name = name;
     this.y = 0;
     this.f1 = f1
-    this.f2 = new functorBlock(blocksize, helpers.linear());
+    this.f2 = new functorBlock(blocksize, lookupFunction("linear"), helpers.linear(1), 0, 1);
     this.maxvalue = maxvalue;
     this.minvalue = minvalue;
   }
@@ -122,7 +125,7 @@ class parameter {
   setPosition = (x, y)=> {
     this.y = y;
     this.f1.setPosition(x+50, y);
-    this.f2.setPosition(x+50 + blocksize + 10, y);
+    this.f2.setPosition(x+50 + blocksize + 20, y);
   }
 
   valueAt = (t)=> {
@@ -143,25 +146,35 @@ class parameter {
 }
 
 function linearFunctorBlock(k=1, def=0.5) {
-  return new functorBlock(blocksize, helpers.linear(k), def);
+  fix = lookupFunction("linear");
+  f = helpers.linear(k);
+  return new functorBlock(blocksize, fix, f, k, def);
 }
 
 function constFunctorBlock(k=1) {
-  return new functorBlock(blocksize, helpers.constant(k), k);
+  fix = lookupFunction("constant");
+  f = helpers.constant(k);
+  return new functorBlock(blocksize, fix, f, k);
 }
 
-function sinFunctorBlock(frequency, amplitude=1.0) {
-  return new functorBlock(blocksize, makeSinFunctor(frequency, amplitude));
+function sinFunctorBlock(amplitude=1.0, frequency=1.0) {
+  let fix = lookupFunction("sin");
+  // we're hardcoding the function here because we need to pass in the frequency and amplitude
+  let f = makeSinFunctor(amplitude, frequency);
+  return new functorBlock(blocksize, fix, f, amplitude, frequency);
 }
 
-function cosFunctorBlock(frequency, amplitude=1.0) {
-  return new functorBlock(blocksize, makeCosFunctor(frequency, amplitude));
+function cosFunctorBlock(amplitude=1.0, frequency=1.0) {
+  let fix = lookupFunction("cos");
+  // we're hardcoding the function here because we need to pass in the frequency and amplitude
+  let f = makeCosFunctor(amplitude, frequency);
+  return new functorBlock(blocksize, fix, f, amplitude, frequency);
 }
 
 class functorBlock {
   // f is a function mapping a value in 0-1 to a point in (0,1)-(0,1);
   // the f function is passed t and the two values v1 and v2
-  constructor(size, f, v1, v2) {
+  constructor(size, fix, f, v1, v2) {
     this.x = 0;
     this.y = 0;
     // v1 and v2 are values from 0-1 that can be set by clicking on the block
@@ -169,13 +182,15 @@ class functorBlock {
     this.v2value = v2;
     this.size = size;
 
+    this.functionIndex = fix;
     this.f = f;
-    this.functionIndex = 0;
+    this.fname = functionTable[fix].name;
   }
 
-  setFunction = (f) => {
+  setFunction = () => {
     this.functionIndex = (this.functionIndex + 1) % functionTable.length;
-    this.f = functionTable[this.functionIndex]();
+    this.f = functionTable[this.functionIndex].f();
+    this.fname = functionTable[this.functionIndex].name;
     this.v1value = undefined;
     this.v2value = undefined;
   }
@@ -215,10 +230,15 @@ class functorBlock {
   }
 
   draw() {
-    stroke(255, 0, 0);
+    stroke(0, 0, 128);
     strokeWeight(1);
-    fill(255);
+    fill(255, 255, 222);
     rect(this.x, this.y, this.size, this.size);
+    textSize(12);
+    fill(0);
+    noStroke();
+    text(this.fname, this.x+1, this.y + this.size + 13);
+    stroke(0);
     stroke(0);
     strokeWeight(2);
     noFill();
@@ -246,22 +266,22 @@ class parametricSketch {
     this.height = height;
     this.bgcolor = 0;
     this.parameters = [];
-    this.addParameter("x", cosFunctorBlock(1, 0.5));
-    this.addParameter("y", sinFunctorBlock(3, 0.25));
-    this.addParameter("w", constFunctorBlock(0.1), 40);
-    this.addParameter("r", linearFunctorBlock(1), 255);
-    this.addParameter("g", constFunctorBlock(1), 255);
-    this.addParameter("b", constFunctorBlock(0.3), 255);
-    this.addParameter("a", constFunctorBlock(1), 255);
+    this.addParameter("x", cosFunctorBlock(.75, .5));
+    this.addParameter("y", sinFunctorBlock(.9, .75));
+    this.addParameter("w", linearFunctorBlock(0, .5), 40);
+    this.addParameter("r", linearFunctorBlock(0, 1), 255);
+    this.addParameter("g", constFunctorBlock(.1), 255);
+    this.addParameter("b", constFunctorBlock(0.9), 255);
+    this.addParameter("a", linearFunctorBlock(.7, 1), 255);
     this.step = 0.001;
     this.layout();
   }
 
   layout() {
-    let y = this.top + 10;
+    let y = this.top + 20;
     for (let i = 0; i < this.parameters.length; i++) {
       this.parameters[i].setPosition(this.left - 390, y);
-      y += blocksize + 10;
+      y += blocksize + 30;
     }
   }
 
@@ -395,7 +415,7 @@ function setup() {
 
 function draw() {
   clear();
-  background(150);
+  background(142, 206, 255);
 
   if (!paused) {
     sketch.draw();
