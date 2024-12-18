@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Parametrix</title>
+
+    <link rel="stylesheet" type="text/css" href="style.css">
+
+    <!-- <script src="libraries/p5.min.js"></script>
+    <script src="libraries/p5.sound.min.js"></script> -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.js"></script>
+    <script src="https://p5play.org/v3/planck.min.js"></script>
+    <script src="https://p5play.org/v3/p5play.js"></script>
+    <script src="sketch.js"></script>
+  </head>
+
+  <body>
+    <a href="..">back</a>
+		<h1>Experimental Parameterized Sketcher</h1>
+    <p class="description">
+      This is an experiment to see what would happen if I allowed all of the
+      parameters of a graph to be controlled by functions that can be stacked.
+      Instead of setting the parameters of a line (position, width, color) to a
+      constant, allow it to be adjusted mathematically along the path of the
+      line.
+    </p>
+    <p class="description">
+      Each parameter has two functions that are applied one after the other
+      along the stroke of the curve. These are shown on the left, with the boxes
+      representing the values of that parameter along the curve.
+      <i>x</i> and <i>y</i> control the position of the point along the curve;
+      <i>w</i> is the width of the line at that point; <i>r</i>, <i>g</i>, <i>b</i>,
+      and <i>a</i> are the red, green, blue, and alpha values of the color.
+    <div id="sketch-holder">
+    </div>
+    <h2>Controls</h2>
+    <ul>
+      <li><b>right click in a function box</b>  -- cycle between function types: sin, cos, linear, constant, quadratic, cubic, bezier</li>
+      <li><b>left click and drag within a function box</b>  -- adjust the function parameters. Experiment!</li>
+      <li><b>r</b>  -- reset the sketch.</li>
+    </p>
+  </body>
+</html>
