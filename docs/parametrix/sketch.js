@@ -4,6 +4,12 @@ let ww = 1400;
 let wh = 1000;
 let blocksize = 100;
 let currentFunctionBlock = null;
+let animate = false;
+let frame = 0;
+let animationFrameTimeMs = 2000;
+let totalAnimationTimeMs = 0;
+let bounce = true;
+let lastDrawMs = 0;
 
 let sketch;
 
@@ -122,15 +128,32 @@ class parameter {
     this.minvalue = minvalue;
   }
 
+  copyF1toF2() {
+    this.f2.copyFrom(this.f1);
+  }
+
   setPosition = (x, y)=> {
     this.y = y;
     this.f1.setPosition(x+50, y);
     this.f2.setPosition(x+50 + blocksize + 20, y);
   }
 
+  plot = (animated, frame, t)=> {
+    if (animated) {
+      return this.animatedValueAt(frame, t);
+    } else {
+      return this.valueAt(t);
+    }
+  }
+
   valueAt = (t)=> {
     return lerp(this.minvalue, this.maxvalue, this.f2.valueAt(this.f1.valueAt(t)));
-    // return this.f1.valueAt(t);
+  }
+
+  animatedValueAt = (frame, t)=> {
+    let v1 = this.f1.valueAt(t);
+    let v2 = this.f2.valueAt(t);
+    return lerp(this.minvalue, this.maxvalue, lerp(v1, v2, frame));
   }
 
   draw = ()=> {
@@ -177,14 +200,22 @@ class functorBlock {
   constructor(size, fix, f, v1, v2) {
     this.x = 0;
     this.y = 0;
+    this.size = size;
     // v1 and v2 are values from 0-1 that can be set by clicking on the block
     this.v1value = v1;
     this.v2value = v2;
-    this.size = size;
 
     this.functionIndex = fix;
     this.f = f;
     this.fname = functionTable[fix].name;
+  }
+
+  copyFrom = (other) => {
+    this.v1value = other.v1value;
+    this.v2value = other.v2value;
+    this.functionIndex = other.functionIndex;
+    this.f = other.f;
+    this.fname = other.fname;
   }
 
   setFunction = () => {
@@ -277,6 +308,12 @@ class parametricSketch {
     this.layout();
   }
 
+  copyAll() {
+    for (let i = 0; i < this.parameters.length; i++) {
+      this.parameters[i].copyF1toF2();
+    }
+  }
+
   layout() {
     let y = this.top + 20;
     for (let i = 0; i < this.parameters.length; i++) {
@@ -288,35 +325,31 @@ class parametricSketch {
   addParameter(name, startf, maxvalue = 1, minvalue = 0) {
     let p = new parameter(name, startf, maxvalue, minvalue);
     this.parameters.push(p);
-    this[name] = p.valueAt;
+    this[name] = p.plot;
     return p;
   }
 
-  valuesAt(t) {
+  valuesAt(animated, frame, t) {
     return {
-      x: this.x(t),
-      y: this.y(t),
-      r: this.r(t),
-      g: this.g(t),
-      b: this.b(t),
-      a: this.a(t),
-      w: this.w(t),
+      x: this.x(animated, frame, t),
+      y: this.y(animated, frame, t),
+      r: this.r(animated, frame, t),
+      g: this.g(animated, frame, t),
+      b: this.b(animated, frame, t),
+      a: this.a(animated, frame, t),
+      w: this.w(animated, frame, t),
     };
   }
 
-  draw() {
+  draw(animated = false, frame = 0) {
     fill(this.bgcolor);
     noStroke();
     rect(this.left, this.top, this.width, this.height);
 
-    let current = this.valuesAt(0);
-    let printed = false;
+    // main plotting loop
+    let current = this.valuesAt(animated, frame, 0);
     for (let i = this.step; i <= 1; i += this.step) {
-      let next = this.valuesAt(i);
-      if (i > 0.5 && !printed) {
-        // console.log(next);
-        printed = true;
-      }
+      let next = this.valuesAt(animated, frame, i);
       stroke(current.r, current.g, current.b, current.a);
       strokeWeight(current.w);
       // invert the y axis
@@ -346,11 +379,44 @@ function windowResized() {
 
 function keyTyped() {
   switch (key) {
-    case ' ':
+    case 'p':
       paused = !paused;
       break;
     case 'r':
       restart();
+      break;
+    case 'c':
+      sketch.copyAll();
+      break;
+    case 'a':
+      animate = !animate;
+      break;
+    case 'b':
+      bounce = !bounce;
+      break;
+    case '>':
+      animationFrameTimeMs = Math.min(10000, animationFrameTimeMs* 1.05);
+      totalAnimationTimeMs = frame * animationFrameTimeMs;
+      break;
+    case '<':
+      animationFrameTimeMs = Math.max(100, animationFrameTimeMs * 0.95);
+      totalAnimationTimeMs = frame * animationFrameTimeMs;
+      break;
+    case '1':
+    case '2':
+    case '3':
+    case '4':
+    case '5':
+    case '6':
+    case '7':
+    case '8':
+    case '9':
+      animationFrameTimeMs = 1000 * (key - '0');
+      totalAnimationTimeMs = frame * animationFrameTimeMs;
+      break;
+    case '0':
+      animationFrameTimeMs = 10000;
+      totalAnimationTimeMs = frame * animationFrameTimeMs;
       break;
   }
 }
@@ -415,10 +481,25 @@ function setup() {
 
 function draw() {
   clear();
-  background(142, 206, 255);
-
-  if (!paused) {
-    sketch.draw();
+  if (animate) {
+    background(206, 142, 255);
+  } else {
+    background(142, 206, 255);
   }
 
+  let t = millis();
+  let deltaTMs = t - lastDrawMs;
+  lastDrawMs = t;
+  if (!paused) {
+    if (animate) {
+      totalAnimationTimeMs += deltaTMs;
+      frame = (totalAnimationTimeMs / animationFrameTimeMs) % 1;
+      if (bounce) {
+        if (totalAnimationTimeMs % (2 * animationFrameTimeMs) > animationFrameTimeMs) {
+          frame = 1 - frame;
+        }
+      }
+    }
+  }
+  sketch.draw(animate, frame);
 }
