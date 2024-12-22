@@ -10,6 +10,7 @@ let animationFrameTimeMs = 2000;
 let totalAnimationTimeMs = 0;
 let bounce = true;
 let lastDrawMs = 0;
+let canvas;
 
 let sketch;
 
@@ -394,6 +395,10 @@ function keyTyped() {
     case 'b':
       bounce = !bounce;
       break;
+    case 's':
+      let name = "parametrix_" + Date.now()%100000;
+      save(canvas, name);
+      break;
     case '>':
       animationFrameTimeMs = Math.min(10000, animationFrameTimeMs* 1.05);
       totalAnimationTimeMs = frame * animationFrameTimeMs;
@@ -474,7 +479,7 @@ function mouseDragged() {
 }
 
 function setup() {
-  let canvas = createCanvas(ww, wh);
+  canvas = createCanvas(ww, wh);
   canvas.parent('sketch-holder');
   restart();
 }
