@@ -31,17 +31,21 @@ class Shape {
       return false;
     }
     fill(this.color);
+    push();
+    translate(this.x, this.y);
+    rotate(this.angle * 2);
     switch (this.shape) {
       case 'circle':
-        ellipse(this.x, this.y, this.size, this.size);
+        ellipse(0, 0, this.size, this.size);
         break;
       case 'square':
-        rect(this.x, this.y, this.size, this.size);
+        rect(0, 0, this.size, this.size);
         break;
       case 'triangle':
-        triangle(this.x, this.y, this.x + this.size, this.y, this.x + this.size / 2, this.y + this.size);
+        triangle(0, 0, this.size, 0, this.size / 2, this.size);
         break;
     }
+    pop();
     return true;
   }
 }
@@ -49,7 +53,7 @@ class Shape {
 function restart() {
   clear();
   shapes = [];
-  bgcolor = color(random(255), random(255), random(255), 10);
+  bgcolor = color(random(255), random(255), random(255), 5);
 }
 
 function windowResized() {
