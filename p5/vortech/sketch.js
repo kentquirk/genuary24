@@ -401,20 +401,20 @@ function mouseClicked() {
 
 function preload() {
   images = [
-    loadImage("images/annuals.png"),
-    loadImage("images/aurora.png"),
-    loadImage("images/crows.png"),
-    loadImage("images/daisies.png"),
-    loadImage("images/kiliSunrise.png"),
-    loadImage("images/lilies.png"),
-    loadImage("images/mesa.png"),
-    loadImage("images/moonring.png"),
-    loadImage("images/mountainPond.png"),
-    loadImage("images/orangeFlower.png"),
-    loadImage("images/rekyavikLight.png"),
-    loadImage("images/sunset1.png"),
-    loadImage("images/sunset2.png"),
-    loadImage("images/tulip.png")
+    loadImage("annuals.png"),
+    loadImage("aurora.png"),
+    loadImage("crows.png"),
+    loadImage("daisies.png"),
+    loadImage("kiliSunrise.png"),
+    loadImage("lilies.png"),
+    loadImage("mesa.png"),
+    loadImage("moonring.png"),
+    loadImage("mountainPond.png"),
+    loadImage("orangeFlower.png"),
+    loadImage("rekyavikLight.png"),
+    loadImage("sunset1.png"),
+    loadImage("sunset2.png"),
+    loadImage("tulip.png")
   ];
   imgix = int(random(images.length));
 }
