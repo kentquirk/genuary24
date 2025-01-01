@@ -13,8 +13,8 @@
 
 <body>
     <section class="hero has-background-primary-light">
-        <div class="hero-body">
-          <p class="title">P5 experiments</p>
+        <div class="hero-body content">
+          <h1>P5 experiments</h1>
           <p>
             In 2024 I started playing with <a href="https://p5js.org/">P5</a> to
             see if I could make some interesting things as part of <a
@@ -24,6 +24,7 @@
             on my Mac desktop and my iPhone.
           </p>
         </div>
+    </section>
     <section class="section" id="root">
         </div>
         <script type="text/babel">
@@ -44,7 +45,7 @@
                     "caption": "January 1, 2025",
                     "title": "Vortech",
                     "subtitle": "(Only vertical and horizontal lines.)",
-                    "body": "This is a Voronoi diagram overlaying an image, where each cell is colored with only vertical and horizontal lines.",
+                    "body": "This is a Voronoi diagram overlaying an image, where each cell is colored with only vertical and horizontal lines. Doesn't really work (yet) on mobile, sorry.",
                 },
                 {
                     "name": "parametrix",
@@ -176,26 +177,26 @@
 
                 function GridItem({ item }) {
                     return (
-                        <div class="cell">
-                            <div class="card">
-                                <div class="card-header">
-                                    <p class="card-header-icon">
-                                        <span class="image is-256x256">
+                        <div className="cell">
+                            <div className="card">
+                                <div className="card-header">
+                                    <p className="card-header-icon">
+                                        <span className="image is-256x256">
                                             <img src={item.image} alt={item.alt} />
                                         </span>
                                     </p>
-                                    <p class="card-header-title">
+                                    <p className="card-header-title">
                                         {item.caption}
                                     </p>
                                 </div>
-                                <div class="card-content">
-                                    <p class="title">{item.title}</p>
-                                    <p class="subtitle is-4">{item.subtitle}</p>
-                                    <div class="content">{item.body}</div>
+                                <div className="card-content">
+                                    <p className="title">{item.title}</p>
+                                    <p className="subtitle is-4">{item.subtitle}</p>
+                                    <div className="content">{item.body}</div>
                                 </div>
-                                <div class="card-footer">
-                                    <a class="card-footer-item button is-primary is-light" href={item.name}>See it run!</a>.
-                                    <a class="card-footer-item button is-link is-light"
+                                <div className="card-footer">
+                                    <a className="card-footer-item button is-primary is-light" href={item.name}>See it run!</a>.
+                                    <a className="card-footer-item button is-link is-light"
                                         href={"https://github.com/kentquirk/genuary24/tree/main/p5/" + item.name}>Source code</a>.
                                 </div>
                             </div>
@@ -205,8 +206,8 @@
 
                 function App() {
                     return (
-                        <div class="fixed-grid has-3-cols has-1-cols-mobile">
-                            <div class="grid">
+                        <div className="fixed-grid has-3-cols has-1-cols-mobile">
+                            <div className="grid">
                                 {data.map((item, index) => (
                                     <GridItem key={index} item={item} />
                                 ))}
