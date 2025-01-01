@@ -2,6 +2,7 @@ let paused = false;
 let n = 20;
 let shapes = [];
 let bgcolor;
+let allblack = false;
 
 class Shape {
   constructor() {
@@ -9,7 +10,11 @@ class Shape {
     this.y = random(height);
     this.rho = random(0, 2 * PI/10);
     this.size = random(10, 100);
-    this.color = color(random(255), random(255), random(255));
+    if (allblack) {
+      this.color = color(random(10, 30));
+    } else {
+      this.color = color(random(255), random(255), random(255));
+    }
     this.shape = random(['circle', 'square', 'triangle']);
     this.angle = random(0, 2 * PI);
     this.speed = random(-5, 5);
@@ -51,9 +56,19 @@ class Shape {
 }
 
 function restart() {
-  clear();
+  allblack = (random(0, 5) < 1);
+  if (allblack) {
+    bgcolor = color(0, 5);
+    background(0);
+  } else {
+    let r = random(255);
+    let g = random(255);
+    let b = random(255);
+    bgcolor = color(r, g, b, 5);
+    clear();
+    background(bgcolor);
+  }
   shapes = [];
-  bgcolor = color(random(255), random(255), random(255), 5);
 }
 
 function windowResized() {
@@ -61,9 +76,17 @@ function windowResized() {
   restart();
 }
 
+function mouseClicked() {
+  restart();
+}
+
 function keyTyped() {
   // this only works for single character keys
   switch (key) {
+    case 'b':
+      allblack = !allblack;
+      restart();
+      break;
     case 'p':
       paused = !paused;
       break;
