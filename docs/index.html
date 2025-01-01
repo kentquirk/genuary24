@@ -2,367 +2,222 @@
 <html lang="en">
 
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <title>Genuary 2024 experiments with P5</title>
-
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma-rtl.min.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generative Experiments with P5</title>
+    <script src="https://unpkg.com/react@17/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js" crossorigin></script>
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.2/css/bulma.min.css">
 </head>
 
 <body>
-  <section class="hero has-background-primary-light">
-    <div class="hero-body">
-      <p class="title">P5 experiments</p>
-      <p>
-        I'm playing with <a href="https://p5js.org/">P5</a> to see if I can make some interesting things as part of <a
-          href="https://genuary.art/">Genuary
-          2024</a>.
-        The P5 system seems to work pretty well on mobile. All of these sketches are tested on my iPhone.
-      </p>
-    </div>
-  </section>
-  <section class="section">
-    <div class="container">
-      <div class="columns">
-        <div class="column">
-          <div class="card">
-            <div class="card-header">
-              <p class="card-header-icon">
-                <span class="image is-256x256">
-                  <img src="_images/joyslash.png" alt="A set of gray wavy lines on a green background">
-                </span>
-              </p>
-              <p class="card-header-title">
-                Genuary 99
-              </p>
-            </div>
-            <div class="card-content">
-              <p class="title">Joyslash</p>
-              <p class="subtitle is-4">(Inspired by...)</p>
-              <div class="content">
-                This is an an attempt to play with the ideas inspired by a famous
-                album cover. There are a bunch of keyboard controls to change it.
-              </div>
-            </div>
-            <div class="card-footer">
-              <a class="card-footer-item button is-primary is-light" href="joyslash/">See it run!</a>.
-              <a class="card-footer-item button is-link is-light"
-                href="https://github.com/kentquirk/genuary24/tree/main/p5/joyslash">Source code</a>.
-            </div>
-          </div>
+    <section class="hero has-background-primary-light">
+        <div class="hero-body">
+          <p class="title">P5 experiments</p>
+          <p>
+            In 2024 I started playing with <a href="https://p5js.org/">P5</a> to
+            see if I could make some interesting things as part of <a
+            href="https://genuary.art/">Genuary</a>. The P5 system seems to work
+            pretty well on mobile and I've been able to accomplish a lot. Now
+            I'm continuing the project in 2025. All of these sketches are tested
+            on my Mac desktop and my iPhone.
+          </p>
         </div>
-        <div class="column">
-          <div class="card">
-            <div class="card-header">
-              <p class="card-header-icon">
-                <span class="image is-256x256">
-                  <img src="_images/tenk.png" alt="A 3D cube made of 10000 colored spheres">
-                </span>
-              </p>
-              <p class="card-header-title">
-                Genuary 16
-              </p>
-            </div>
-            <div class="card-content">
-              <p class="title">TenK</p>
-              <p class="subtitle is-4">(Draw 10,000 of something)</p>
-              <div class="content">
-                This is a 3D cube made of 10,000 spheres. You can rotate it around. It's not very exciting but it
-                was just an experiment to see what 3D in p5js would be like.
-              </div>
-            </div>
-            <div class="card-footer">
-              <a class="card-footer-item button is-primary is-light" href="tenk/">See it run!</a>.
-              <a class="card-footer-item button is-link is-light"
-                href="https://github.com/kentquirk/genuary24/tree/main/p5/tenk">Source code</a>.
-            </div>
-          </div>
+    <section class="section" id="root">
         </div>
-        <div class="column">
-        </div>
-      </div>
-      <div class="columns">
-        <div class="column">
-          <div class="card">
-            <div class="card-header">
-              <p class="card-header-icon">
-                <span class="image is-256x256">
-                  <img src="_images/flowful.png" alt="A pattern of colorful dots forming a Lissajous figure">
-                </span>
-              </p>
-              <p class="card-header-title">
-                Genuary 15
-              </p>
-            </div>
-            <div class="card-content">
-              <p class="title">Flowful</p>
-              <p class="subtitle is-4">(Use a physics library)</p>
-              <div class="content">
-                This is an experiment with flow fields and a physics library. The flow field is a grid of vectors that
-                point in a direction that is a function of the x and y coordinates. The physics library is used to
-                create a bunch of particles that are affected by the flow field. The particles are colored based on
-                their mass and the flow vectors rotate in synchrony.
-              </div>
-            </div>
-            <div class="card-footer">
-              <a class="card-footer-item button is-primary is-light" href="flowful/">See it run!</a>.
-              <a class="card-footer-item button is-link is-light"
-                href="https://github.com/kentquirk/genuary24/tree/main/p5/flowful">Source code</a>.
-            </div>
-          </div>
-        </div>
-        <div class="column">
-          <div class="card">
-            <div class="card-header">
-              <p class="card-header-icon">
-                <span class="image is-256x256">
-                  <img src="_images/sevendeadly.png" alt="A pattern of colorful dots forming a Lissajous figure">
-                </span>
-              </p>
-              <p class="card-header-title">
-                Genuary 13
-              </p>
-            </div>
-            <div class="card-content">
-              <p class="title">Seven Deadly Sines</p>
-              <p class="subtitle is-4">(Wobbly function day)</p>
-              <div class="content">
-                This project combines seven sine wave generators at different frequencies to make one smoothly evolving
-                image.
-                It uses the basic concept of Lissajous figures but uses dots instead of continuous lines, and
-                modifies colors and dot sizes dynamically too.
-              </div>
-            </div>
-            <div class="card-footer">
-              <a class="card-footer-item button is-primary is-light" href="sevenDeadlySines/">See it run!</a>.
-              <a class="card-footer-item button is-link is-light"
-                href="https://github.com/kentquirk/genuary24/tree/main/p5/sevenDeadlySines">Source code</a>.
-            </div>
-          </div>
-        </div>
-        <div class="column">
-          <div class="card">
-            <div class="card-header">
-              <p class="card-header-icon">
-                <span class="image is-256x256">
-                  <img src="_images/lavalamp.png" alt="Random dots in a Voronoi mesh surrounded by a concave hull">
-                </span>
-              </p>
-              <p class="card-header-title">
-                Genuary 12
-              </p>
-            </div>
-            <div class="card-content">
-              <p class="title">Not a Lavalamp</p>
-              <p class="subtitle is-4">(Lava Lamp)</p>
-              <div class="content">
-                I wanted to create a lavalamp by doing a physics simulation of a mesh of points under
-                various forces. I played with using a concave hull library to create the shape around
-                the collection of points, and also with using a Voronoi diagram to create a mesh and
-                then adding some weird spring-like forces to try to keep the mesh together. I had more
-                fun playing with that and never bothered to finish making it look like a lavalamp.
-              </div>
-            </div>
-          </div>
-          <div class="card-footer">
-            <a class="card-footer-item button is-primary is-light" href="lavalamp/">See it run!</a>.
-            <a class="card-footer-item button is-link is-light"
-              href="https://github.com/kentquirk/genuary24/tree/main/p5/lavalamp">Source code</a>.
-          </div>
-        </div>
-      </div>
-      <div class="columns">
-        <div class="column">
-          <div class="card">
-            <div class="card-header">
-              <p class="card-header-icon">
-                <span class="image is-256x256">
-                  <img src="_images/kaotik.png" alt="A set of green and brown grid squares with white and black dots">
-                </span>
-              </p>
-              <p class="card-header-title">
-                Genuary 8
-              </p>
-            </div>
-            <div class="card-content">
-              <p class="title">Kaotic </p>
-              <p class="subtitle">(chaotic)</p>
-              <div class="content">
-                This is a simulation of rabbits and wolves in an ecosystem. The rabbits eat the grass,
-                the wolves eat the rabbits, and the wolves die if they don't eat enough rabbits.
-                Their populations fluctuate chaotically.
-              </div>
-            </div>
-            <div class="card-footer">
-              <a class="card-footer-item button is-primary is-light" href="kaotik/">See it run!</a>.
-              <a class="card-footer-item button is-link is-light"
-                href="https://github.com/kentquirk/genuary24/tree/main/p5/kaotic">Source code</a>.
-            </div>
-          </div>
-        </div>
-        <div class="column">
-          <div class="card">
-            <div class="card-header">
-              <p class="card-header-icon">
-                <span class="image is-256x256">
-                  <img src="_images/pixasplode.png" alt="A pixelated picture of a dog with all the pixels out of place">
-                </span>
-              </p>
-              <p class="card-header-title">
-                Genuary 4 & 6
-              </p>
-            </div>
-            <div class="card-content">
-              <p class="title">Pixasplode</p>
-              <p class="subtitle">(Pixels & Screensaver)</p>
-              <div class="content">
-                This loads a picture, draws it as circular pixels in random order, and then gives each pixel
-                a weak velocity dependent on the hue of the pixel. It's a fairly pleasing way to blow up the
-                image.
-              </div>
-            </div>
-            <div class="card-footer">
-              <a class="card-footer-item button is-primary is-light" href="pixasplode/">See it run!</a>.
-              <a class="card-footer-item button is-link is-light"
-                href="https://github.com/kentquirk/genuary24/tree/main/p5/pixasplode">Source code</a>.
-            </div>
-          </div>
-        </div>
-        <div class="column">
-          <div class="card-header">
-            <p class="card-header-icon">
-              <span class="image is-256x256">
-                <img src="_images/droste.png" alt="A circular view of a set of colored circles">
-              </span>
-            </p>
-            <p class="card-header-title">
-              Genuary 3
-            </p>
-          </div>
-          <div class="card">
-            <div class="card-content">
-              <p class="title">Zooming In</p>
-              <p class="subtitle">(The Droste Effect)</p>
-              <div class="content">
-                The Droste Effect is when an image contains a smaller version of itself;
-                in this case what I was after was that you're looking at microbes through
-                a microscope, and you see them float onscreen. You move the slide to
-                center one of them, zoom in, and find that the microbe contains more
-                microbes.<br />
-                It's not perfect but I like it.<br />
-                <blockquote>
-                  Big fleas have little fleas<br />
-                  Upon their backs to bite 'em<br />
-                  And little fleas still lesser fleas<br />
-                  And so, <i>ad infinitum</i><br />
-                </blockquote>
-              </div>
-            </div>
-          </div>
-          <div class="card-footer">
-            <a class="card-footer-item button is-primary is-light" href="droste/">See it run!</a>.
-            <a class="card-footer-item button is-link is-light"
-              href="https://github.com/kentquirk/genuary24/tree/main/p5/droste">Source code</a>.
-          </div>
-        </div>
-      </div>
-      <div class="columns">
-        <div class="column">
-          <div class="card">
-            <div class="card-header">
-              <p class="card-header-icon">
-                <span class="image is-256x256">
-                  <img src="_images/colorgrid.png"
-                    alt="A rectilinear pattern of different-sized and colored rectangles">
-                </span>
-              </p>
-              <p class="card-header-title">
-                Genuary 2
-              </p>
-            </div>
-            <div class="card-content">
-              <p class="title">Fading Grid</p>
-              <p class="subtitle">(No Palette)</p>
-              <div class="content">
-                This creates an array of rectangles starting with one that covers the
-                whole canvas, colored randomly. Each round, it chooses a random rectangle
-                and splits it into two rectangles either horizontally or vertically. Each
-                of these new rectangles is then recolored with a variation of the previous
-                color by choosing either r, g, or b from the parent rectangle. Then one
-                half adds to that value (lightening it), and the other subtracts from it
-                (darkening it). The other two components of the color are kept constant.
-                The colors fade from the starting value to the target value over time.
-                When the grid gets too dense, it clears and starts over.
-              </div>
-            </div>
-            <div class="card-footer">
-              <a class="card-footer-item button is-primary is-light" href="nopalette/">See it run!</a>.
-              <a class="card-footer-item button is-link is-light"
-                href="https://github.com/kentquirk/genuary24/tree/main/p5/nopalette">Source code</a>.
-            </div>
-          </div>
-        </div>
-        <div class="column">
-          <div class="card">
-            <div class="card-header">
-              <p class="card-header-icon">
-                <span class="image is-256x256">
-                  <img src="_images/probtoy.png"
-                    alt="A simulation of colored balls dropping through pins and into slots">
-                </span>
-              </p>
-              <p class="card-header-title">
-                Genuary 1
-              </p>
-            </div>
-            <div class="card-content">
-              <p class="title">Probability Toy</p>
-              <p class="subtitle">(Particles)</p>
-              <div class="content">
-                This simulates a mathematical toy I've seen that drops hundreds of balls into a grid of pins, and they
-                fall into a
-                bell curve.
-              </div>
-            </div>
-            <div class="card-footer">
-              <a class="card-footer-item button is-primary is-light" href="probtoy/">See it run!</a>.
-              <a class="card-footer-item button is-link is-light"
-                href="https://github.com/kentquirk/genuary24/tree/main/p5/probtoy">Source code</a>.
-            </div>
-          </div>
-        </div>
-        <div class="column">
-          <div class="card">
-            <div class="card-header">
-              <p class="card-header-icon">
-                <span class="image is-256x256">
-                  <img src="_images/wall.png" alt="A set of colored dots stuck to the right edge of the screen">
-                </span>
-              </p>
-              <p class="card-header-title">
-                Genuary 1
-              </p>
-            </div>
-            <div class="card-content">
-              <p class="title">See What Sticks</p>
-              <p class="subtitle">(Particles)</p>
-              <div class="content">
-                This is a particle experiment. Each particle is thrown at a random angle, and when it hits the wall, it
-                sticks. If it hits a stuck particle, it sticks.
-                The particle chains grow in interesting ways. It clears and restarts whenever it gets full.
-              </div>
-            </div>
-            <div class="card-footer">
-              <a class="card-footer-item button is-primary is-light" href="particles2/">See it run!</a>.
-              <a class="card-footer-item button is-link is-light"
-                href="https://github.com/kentquirk/genuary24/tree/main/p5/particles2">Source code</a>.
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
+        <script type="text/babel">
+            const data = [
+                // {
+                //     "name": "xxx",
+                //     "image": "_images/xxx.png",
+                //     "alt": "",
+                //     "caption": "Genuary , 2024",
+                //     "title": "xxx",
+                //     "subtitle": "",
+                //     "body": "",
+                // },
+                {
+                    "name": "vortech",
+                    "image": "_images/vortech.png",
+                    "alt": "An image viewed through a Voronoi mesh and colored with only vertical and horizontal lines.",
+                    "caption": "January 1, 2025",
+                    "title": "Vortech",
+                    "subtitle": "(Only vertical and horizontal lines.)",
+                    "body": "This is a Voronoi diagram overlaying an image, where each cell is colored with only vertical and horizontal lines.",
+                },
+                {
+                    "name": "parametrix",
+                    "image": "_images/parametrix.png",
+                    "alt": "A sinusoidal pattern with smoothly varying colors and line width",
+                    "caption": "December, 2024",
+                    "title": "Parametrix",
+                    "subtitle": "(Graphics driven entirely by parametric functions)",
+                    "body": "A graphical system where every parameter can be controlled by a function of t. Can be static or animated."
+                },
+                {
+                    "name": "stringart",
+                    "image": "_images/stringart.png",
+                    "alt": "A pattern of colored lines forming a starburst.",
+                    "caption": "November, 2024",
+                    "title": "String Art",
+                    "subtitle": "(Nails and thread on velvet)",
+                    "body": "This is a simulation of string art, where you pound nails into a board in a pattern and then wrap thread around them to create a design.",
+                },
+                {
+                    "name": "perlin",
+                    "image": "_images/perlin.png",
+                    "alt": "A colorful cloud-like noise texture.",
+                    "caption": "Summer, 2024",
+                    "title": "Perlin",
+                    "subtitle": "(Perlin noise)",
+                    "body": "This uses dynamically modified Perlin noise to create a flowing animated pattern.",
+                },
+                {
+                    "name": "joyslash",
+                    "image": "_images/joyslash.png",
+                    "alt": "A collection of wavy lines looking like hills and valleys.",
+                    "caption": "Summer 2024",
+                    "title": "Joyslash",
+                    "subtitle": "(Inspired by...)",
+                    "body": "This is an an attempt to play with the ideas inspired by a famous album cover. There are a bunch of keyboard controls to change it.",
+                },
+                {
+                    "name": "tenk",
+                    "image": "_images/tenk.png",
+                    "alt": "A 3D cube made up of 10,000 spheres.",
+                    "caption": "Genuary 16, 2024",
+                    "title": "TenK",
+                    "subtitle": "(Draw 10,000 of something)",
+                    "body": "This is a 3D cube made of 10,000 spheres. You can rotate it around. It's not very exciting but it was just an experiment to see what 3D in p5js would be like.",
+                },
+                {
+                    "name": "flowful",
+                    "image": "_images/flowful.png",
+                    "alt": "A pattern of colorful dots flying around the screen.",
+                    "caption": "Genuary 15, 2024",
+                    "title": "Flowful",
+                    "subtitle": "(Use a physics library)",
+                    "body": "This is an experiment with flow fields and a physics library. The flow field is a grid of vectors that point in a direction that is a function of the x and y coordinates. The physics library is used to create a bunch of particles that are affected by the flow field. The particles are colored based on their mass and the flow vectors rotate in synchrony.",
+                },
+                {
+                    "name": "sevenDeadlySines",
+                    "image": "_images/sevendeadly.png",
+                    "alt": "A pattern of colorful dots forming a Lissajous figure.",
+                    "caption": "Genuary 13, 2024",
+                    "title": "Seven Deadly Sines",
+                    "subtitle": "(Wobbly function day)",
+                    "body": "This project combines seven sine wave generators at different frequencies to make one smoothly evolving image. It uses the basic concept of Lissajous figures but uses dots instead of continuous lines, and modifies colors and dot sizes dynamically too.",
+                },
+                {
+                    "name": "lavalamp",
+                    "image": "_images/lavalamp.png",
+                    "alt": "Random dots in a Voronoi mesh surrounded by a concave hull.",
+                    "caption": "Genuary 12, 2024",
+                    "title": "Not a Lavalamp",
+                    "subtitle": "(Lava Lamp)",
+                    "body": "I wanted to create a lavalamp by doing a physics simulation of a mesh of points under various forces. I played with using a concave hull library to create the shape around the collection of points, and also with using a Voronoi diagram to create a mesh and then adding some weird spring-like forces to try to keep the mesh together. I had more fun playing with that and never bothered to finish making it look like a lavalamp.",
+                },
+                {
+                    "name": "kaotik",
+                    "image": "_images/kaotik.png",
+                    "alt": "A set of green and brown grid squares with white and black dots.",
+                    "caption": "Genuary 8, 2024",
+                    "title": "Kaotic",
+                    "subtitle": "(chaotic)",
+                    "body": "This is a simulation of rabbits and wolves in an ecosystem. The rabbits eat the grass, the wolves eat the rabbits, and the wolves die if they don't eat enough rabbits. Their populations fluctuate chaotically.",
+                },
+                {
+                    "name": "pixasplode",
+                    "image": "_images/pixasplode.png",
+                    "alt": "A pixelated picture of a dog with all the pixels slightly out of place.",
+                    "caption": "Genuary 4 & 6, 2024",
+                    "title": "Pixasplode",
+                    "subtitle": "(Pixels & Screensaver)",
+                    "body": "This loads a picture, draws it as circular pixels in random order, and then gives each pixel a weak velocity dependent on the hue of the pixel. It's a fairly pleasing way to blow up the image.",
+                },
+                {
+                    "name": "droste",
+                    "image": "_images/droste.png",
+                    "alt": "A purple circle with a black interior, containing many other small colored circles.",
+                    "caption": "Genuary 3, 2024",
+                    "title": "Zooming In",
+                    "subtitle": "(The Droste Effect)",
+                    "body": "The Droste Effect is when an image contains a smaller version of itself; in this case what I was after was that you're looking at microbes through a microscope, and you see them float onscreen. You move the slide to center one of them, zoom in, and find that the microbe contains more microbes.<br /> It's not perfect but I like it.<br /> <blockquote> Big fleas have little fleas<br /> Upon their backs to bite 'em<br /> And little fleas still lesser fleas<br /> And so, <i>ad infinitum</i><br /> </blockquote>",
+                },
+                {
+                    "name": "nopalette",
+                    "image": "_images/nopalette.png",
+                    "alt": "A rectilinear pattern of different-sized and colored rectangles",
+                    "caption": "Genuary 2, 2024",
+                    "title": "Fading Grid",
+                    "subtitle": "(No Palette)",
+                    "body": "This creates an array of rectangles starting with one that covers the whole canvas, colored randomly. Each round, it chooses a random rectangle and splits it into two rectangles either horizontally or vertically. Each of these new rectangles is then recolored with a variation of the previous color by choosing either r, g, or b from the parent rectangle. Then one half adds to that value (lightening it), and the other subtracts from it (darkening it). The other two components of the color are kept constant. The colors fade from the starting value to the target value over time. When the grid gets too dense, it clears and starts over.",
+                },
+                {
+                    "name": "probtoy",
+                    "image": "_images/probtoy.png",
+                    "alt": "A simulation of colored balls dropping into a grid of pegs.",
+                    "caption": "Genuary 1, 2024",
+                    "title": "Probability Toy",
+                    "subtitle": "(Particles)",
+                    "body": "This simulates a mathematical toy I've seen that drops hundreds of balls into a grid of pins, and they fall into a bell curve.",
+                },
+                {
+                    "name": "particles2",
+                    "image": "_images/wall.png",
+                    "alt": "A set of colored dots stuck to the right edge of the screen",
+                    "caption": "Genuary 1, 2024",
+                    "title": "See What Sticks",
+                    "subtitle": "(Particles)",
+                    "body": "This is a particle experiment. Each particle is thrown at a random angle, and when it hits the wall, it sticks. If it hits a stuck particle, it sticks. The particle chains grow in interesting ways. It clears and restarts whenever it gets full.",
+                },
+            ];
+
+                function GridItem({ item }) {
+                    return (
+                        <div class="cell">
+                            <div class="card">
+                                <div class="card-header">
+                                    <p class="card-header-icon">
+                                        <span class="image is-256x256">
+                                            <img src={item.image} alt={item.alt} />
+                                        </span>
+                                    </p>
+                                    <p class="card-header-title">
+                                        {item.caption}
+                                    </p>
+                                </div>
+                                <div class="card-content">
+                                    <p class="title">{item.title}</p>
+                                    <p class="subtitle is-4">{item.subtitle}</p>
+                                    <div class="content">{item.body}</div>
+                                </div>
+                                <div class="card-footer">
+                                    <a class="card-footer-item button is-primary is-light" href={item.name}>See it run!</a>.
+                                    <a class="card-footer-item button is-link is-light"
+                                        href={"https://github.com/kentquirk/genuary24/tree/main/p5/" + item.name}>Source code</a>.
+                                </div>
+                            </div>
+                        </div>
+                    );
+                }
+
+                function App() {
+                    return (
+                        <div class="fixed-grid has-3-cols has-1-cols-mobile">
+                            <div class="grid">
+                                {data.map((item, index) => (
+                                    <GridItem key={index} item={item} />
+                                ))}
+                            </div>
+                        </div>
+                    );
+                }
+
+            ReactDOM.render(<App />, document.getElementById('root'));
+        </script>
+
 </body>
 
 </html>
